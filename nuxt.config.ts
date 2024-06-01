@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { randomBytes } from 'crypto';
 export default defineNuxtConfig({
   devtools: { enabled: false },
   app: {
@@ -72,6 +73,11 @@ export default defineNuxtConfig({
     "@nuxtjs/seo",
     "nuxt-csurf"
   ],
+  csurf: {
+    https: true,
+    cookieKey: 'csrf',
+    addCsrfTokenToEventCtx: true
+  },
   security: {
     rateLimiter: {
       tokensPerInterval: 150,
