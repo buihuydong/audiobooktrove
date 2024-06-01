@@ -81,7 +81,7 @@ export default defineNuxtConfig({
       httpOnly: true,
       sameSite: 'strict'
     },
-    encryptAlgorithm: 'AES-CBC',
+    encryptAlgorithm: 'aes-256-cbc',
     addCsrfTokenToEventCtx: true
   },
   security: {
