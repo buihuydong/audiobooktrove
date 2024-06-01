@@ -261,9 +261,8 @@ export default {
             return $createSlug(string);
         },
         async handlePromotion() {
-            const { $csrfFetch } = useNuxtApp();
                 try {
-                    const promotionResponse = await $csrfFetch('/api/promotion', {
+                    const promotionResponse = await $fetch('/api/promotion', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -292,9 +291,8 @@ export default {
             };
         },
         async handleCheckCart() {
-            const { $csrfFetch } = useNuxtApp();
                 try {
-                    const cartResponse = await $csrfFetch('/api/cart', {
+                    const cartResponse = await $fetch('/api/cart', {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -311,9 +309,8 @@ export default {
                 }
         },
         async handleAddToCart(product) {
-            const { $csrfFetch } = useNuxtApp();
                 try {
-                    const productResponse = await $csrfFetch('/api/cart', {
+                    const productResponse = await $fetch('/api/cart', {
                         method: 'POST',
                         body: {
                             id: product.id
@@ -332,9 +329,8 @@ export default {
                 }
         },
         async handleBuyNow(product) {
-            const { $csrfFetch } = useNuxtApp();
                 try {
-                    const productResponse = await $csrfFetch('/api/cart', {
+                    const productResponse = await $fetch('/api/cart', {
                         method: 'POST',
                         body: {
                             id: product.id

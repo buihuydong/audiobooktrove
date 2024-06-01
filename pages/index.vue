@@ -67,16 +67,15 @@ export default {
       return item.data;
     },
     async handleApi() {
-      const { $csrfFetch } = useNuxtApp();
       try {
         const [heroResponse, productResponse] = await Promise.all([
-          $csrfFetch('/api/hero', {
+          $fetch('/api/hero', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             }
           }),
-          $csrfFetch('/api/product/home', {
+          $fetch('/api/product/home', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

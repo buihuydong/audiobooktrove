@@ -30,9 +30,8 @@ export default {
     },
     methods: {
         async handleApi() {
-            const { $csrfFetch } = useNuxtApp();
                 try {
-                    const cartResponse = await $csrfFetch(`/api/cart`, {
+                    const cartResponse = await $fetch(`/api/cart`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',

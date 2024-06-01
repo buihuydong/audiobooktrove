@@ -238,9 +238,8 @@ export default {
             this.handleApiProductParam(page, category, sort, keyword);
         },
         async handleApiProduct() {
-            const { $csrfFetch } = useNuxtApp();
             try {
-                const productResponse = await $csrfFetch('/api/product', {
+                const productResponse = await $fetch('/api/product', {
                     method: 'POST',
                     body: {
                         page: this.page,
@@ -269,9 +268,8 @@ export default {
             }
         },
         async handleApiCategory() {
-            const { $csrfFetch } = useNuxtApp();
             try {
-                const categoryResponse = await $csrfFetch('/api/category', {
+                const categoryResponse = await $fetch('/api/category', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -286,9 +284,8 @@ export default {
             }
         },
         async handleApiCount() {
-            const { $csrfFetch } = useNuxtApp();
             try {
-                const countProductResponse = await $csrfFetch('/api/paginator', {
+                const countProductResponse = await $fetch('/api/paginator', {
                     method: 'POST',
                     body: {
                         category: this.category,
@@ -307,9 +304,8 @@ export default {
             }
         },
         async handleApiProductParam(page, category, sort, keyword) {
-            const { $csrfFetch } = useNuxtApp();
             try {
-                const productResponse = await $csrfFetch('/api/product', {
+                const productResponse = await $fetch('/api/product', {
                     method: 'POST',
                     body: {
                         page: page,

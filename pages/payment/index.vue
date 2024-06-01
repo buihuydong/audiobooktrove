@@ -13,8 +13,7 @@ const cartStore = reactive({
 });
 
 const handleCheckOut = async () => {
-    const { $csrfFetch } = useNuxtApp();
-    const response = await $csrfFetch('/api/payment/adHoc', {
+    const response = await $fetch('/api/payment/adHoc', {
         method: "POST",
         body: JSON.stringify({
             products: cartStore.products.map((product) => ({

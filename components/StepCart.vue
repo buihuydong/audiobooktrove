@@ -159,9 +159,9 @@ export default {
                 this.productCart = this.productCart.filter(product => remainingItemIds.includes(product.id));
                 this.selectedProducts = this.selectedProducts.filter(id => remainingItemIds.includes(id));
                 this.countCart = this.productCart.length;
-                const { $csrfFetch } = useNuxtApp();
+
                 try {
-                    const cartResponse = await $csrfFetch('/api/cart/all', {
+                    const cartResponse = await $fetch('/api/cart/all', {
                         method: 'DELETE',
                         body: {
                             ids: checkedItemIds,
@@ -182,9 +182,8 @@ export default {
             }
         },
         async handleApiCartRemove(productId) {
-            const { $csrfFetch } = useNuxtApp();
             try {
-                const cartResponse = await $csrfFetch('/api/cart', {
+                const cartResponse = await $fetch('/api/cart', {
                     method: 'DELETE',
                     body: {
                         id: productId,
@@ -206,9 +205,8 @@ export default {
             }
         },
         async handleApiCart() {
-            const { $csrfFetch } = useNuxtApp();
             try {
-                const cartResponse = await $csrfFetch('/api/cart/products', {
+                const cartResponse = await $fetch('/api/cart/products', {
                     method: 'POST',
                     body: {
                         ids: this.products,
@@ -249,9 +247,8 @@ export default {
             return $createSlug(string);
         },
         async handlePromotion() {
-            const { $csrfFetch } = useNuxtApp();
             try {
-                const promotionResponse = await $csrfFetch('/api/promotion', {
+                const promotionResponse = await $fetch('/api/promotion', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -289,8 +286,7 @@ export default {
         async handlePayment() {
             this.isPendingPay = true;
             const user = useSupabaseUser();
-            const { $csrfFetch } = useNuxtApp();
-            const response = await $csrfFetch('/api/payment/adHoc', {
+            const response = await $fetch('/api/payment/adHoc', {
                 method: "POST",
                 body: {
                     'ids': this.selectedProducts,

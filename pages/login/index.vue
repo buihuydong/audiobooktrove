@@ -146,9 +146,8 @@ const layout = {
 
 const handleFinish = async (values: FormState) => {
     load.value = true;
-    const { $csrfFetch } = useNuxtApp();
     try {
-        const response = await $csrfFetch('/api/validateTurnstile', {
+        const response = await $fetch('/api/validateTurnstile', {
             method: 'POST',
             body: {
                 token: turnstile.value

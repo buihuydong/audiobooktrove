@@ -71,8 +71,14 @@ export default defineNuxtConfig({
     'nuxt-security',
     'nuxt-time',
     "@nuxtjs/seo",
-    "nuxt-csurf"
   ],
+  security: {
+    csrf: false,
+    headers: {
+      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+    },
+  },
   supabase: {
     redirect: false
   },

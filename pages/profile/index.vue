@@ -307,9 +307,8 @@ export default {
         },
         async handleDownloadFile(bucket, key) {
             this.isPendingFile[key] = true;
-            const { $csrfFetch } = useNuxtApp();
             try {
-                const s3Response = await $csrfFetch(`/api/services/S3ServiceUrl`, {
+                const s3Response = await $fetch(`/api/services/S3ServiceUrl`, {
                     method: 'POST',
                     body: {
                         'bucket': bucket,
@@ -344,9 +343,9 @@ export default {
             } else {
                 this.isFailed = false;
                 this.isPendingSubmit = true;
-                const { $csrfFetch } = useNuxtApp();
+
                 try {
-                    const reviewResponse = await $csrfFetch(`/api/product/review`, {
+                    const reviewResponse = await $fetch(`/api/product/review`, {
                         method: 'POST',
                         body: {
                             'overall': this.overall,
@@ -422,9 +421,8 @@ export default {
         async handleTransaction() {
             this.isData = false;
             const user = useSupabaseUser();
-            const { $csrfFetch } = useNuxtApp();
             try {
-                const transactionResponse = await $csrfFetch(`/api/product/transaction/${user.value.id}`, {
+                const transactionResponse = await $fetch(`/api/product/transaction/${user.value.id}`, {
                     method: 'POST',
                     body: {
                         page: this.page,
@@ -451,9 +449,8 @@ export default {
         async handleCountTransaction() {
             this.isData = false;
             const user = useSupabaseUser();
-            const { $csrfFetch } = useNuxtApp();
             try {
-                const countProductResponse = await $csrfFetch(`/api/product/transactionCount/${user.value.id}`, {
+                const countProductResponse = await $fetch(`/api/product/transactionCount/${user.value.id}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

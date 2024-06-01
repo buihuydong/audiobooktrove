@@ -124,9 +124,8 @@ export default {
     methods: {
         async handleApi() {
             const slug = this.$route.params.slug;
-            const { $csrfFetch } = useNuxtApp();
             try {
-                const productResponse = await $csrfFetch(`/api/product/${slug}`, {
+                const productResponse = await $fetch(`/api/product/${slug}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -136,7 +135,7 @@ export default {
                     this.isData = true;
                     this.products = productResponse.data;
                     const productId = this.products.data.product.id;
-                    const productDetailResponse = await $csrfFetch(`/api/product/detail/${productId}`, {
+                    const productDetailResponse = await $fetch(`/api/product/detail/${productId}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -145,7 +144,7 @@ export default {
                     if (productDetailResponse.data) {
                         this.productBy = productDetailResponse.data;
                     }
-                    const reviewResponse = await $csrfFetch(`/api/product/review/${productId}`, {
+                    const reviewResponse = await $fetch(`/api/product/review/${productId}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
