@@ -73,17 +73,6 @@ export default defineNuxtConfig({
     "@nuxtjs/seo",
     "nuxt-csurf"
   ],
-  csurf: {
-    https: true,
-    cookieKey: 'csrf',
-    cookie: {
-      path: '/',
-      httpOnly: true,
-      sameSite: 'strict'
-    },
-    encryptAlgorithm: 'aes-256-cbc',
-    addCsrfTokenToEventCtx: true
-  },
   security: {
     rateLimiter: {
       tokensPerInterval: 150,
