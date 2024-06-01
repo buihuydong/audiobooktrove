@@ -191,6 +191,7 @@ export default {
                     src: [audioKey],
                     loop: false,
                     duration: 150000,
+                    html5: true,
                     onload: () => {
                         this.startAudio(audioKey);
                     },

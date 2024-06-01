@@ -95,7 +95,7 @@ export default {
         };
 
         const saveToLocalStorage = (key, data) => {
-            const expiryDate = new Date().getTime() + 3 * 24 * 60 * 60 * 1000;
+            const expiryDate = new Date().getTime() + 12 * 60 * 60 * 1000;
             const item = {
                 data: data,
                 expiry: expiryDate,
