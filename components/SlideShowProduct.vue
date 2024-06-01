@@ -150,25 +150,18 @@ export default {
                 .join(' ');
         },
         async handlePromotion() {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const promotionResponse = await $fetch('/api/promotion', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
-                    if (promotionResponse.data) {
-                        this.promotion = promotionResponse.data.data;
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            try {
+                const promotionResponse = await $fetch('/api/promotion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (promotionResponse.data) {
+                    this.promotion = promotionResponse.data.data;
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         promotionStyle(product) {

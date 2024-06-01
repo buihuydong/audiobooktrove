@@ -68,7 +68,6 @@ definePageMeta({
 });
 import { signInWithOAuthGoogle, signInWithEmail } from '@/composables/useSupabase';
 const supabase = useSupabaseClient();
-
 const load = ref<boolean>(false);
 const success = ref<boolean>(false);
 const failure = ref<boolean>(false);
@@ -88,7 +87,7 @@ const formState = reactive<FormState>({
 
 const getRememberAuth = async () => {
     try {
-        const response = await useCsrfFetch('/api/auth/remember', {
+        const response = await $fetch('/api/auth/remember', {
             method: 'get'
         });
         if (response !== false) {
