@@ -169,7 +169,7 @@ const handleFinish = async (values: FormState) => {
                             password: formState.pass
                         };
 
-                        const response = await useCsrfFetch('/api/auth/remember', {
+                        const response = await $fetch('/api/auth/remember', {
                             method: 'post',
                             body: data
                         });
