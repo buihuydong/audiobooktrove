@@ -73,22 +73,6 @@ export default defineNuxtConfig({
     "@nuxtjs/seo",
     "nuxt-csurf"
   ],
-  security: {
-    rateLimiter: {
-      tokensPerInterval: 150,
-      interval: 300000,
-      headers: false,
-      driver: {
-        name: 'lruCache'
-      },
-      throwError: true
-    },
-    headers: {
-      crossOriginEmbedderPolicy: process.env.NODE_ENV === 'development' ? 'unsafe-none' : 'require-corp',
-      contentSecurityPolicy: false,
-      crossOriginEmbedderPolicy: false,
-    },
-  },
   supabase: {
     redirect: false
   },
