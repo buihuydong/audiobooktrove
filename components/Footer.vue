@@ -79,10 +79,9 @@ export default {
         const categories = ref([]);
         const aboutUs = ref(null);
         const contact = ref([]);
-        const { $csrfFetch } = useNuxtApp();
         const fetchData = async (url) => {
             try {
-                const response = await $csrfFetch(url, {
+                const response = await $fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
