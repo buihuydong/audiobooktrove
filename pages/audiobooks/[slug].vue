@@ -124,64 +124,56 @@ export default {
     methods: {
         async handleApi() {
             const slug = this.$route.params.slug;
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const productResponse = await $fetch(`/api/product/${slug}`, {
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const productResponse = await $csrfFetch(`/api/product/${slug}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (productResponse.data) {
+                    this.isData = true;
+                    this.products = productResponse.data;
+                    const productId = this.products.data.product.id;
+                    const productDetailResponse = await $csrfFetch(`/api/product/detail/${productId}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
                         },
                     });
-                    if (productResponse.data) {
-                        this.isData = true;
-                        this.products = productResponse.data;
-                        const productId = this.products.data.product.id;
-                        const productDetailResponse = await $fetch(`/api/product/detail/${productId}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Csrf-Token': csrfToken,
+                    if (productDetailResponse.data) {
+                        this.productBy = productDetailResponse.data;
+                    }
+                    const reviewResponse = await $csrfFetch(`/api/product/review/${productId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    if (reviewResponse.data && reviewResponse.data.error != 'No data') {
+                        this.ratingsCategories = reviewResponse.data;
+                        this.ratingCategories = {
+                            overall: {
+                                label: 'Overall',
+                                average: this.ratingsCategories.averageOverall,
+                                total: this.ratingsCategories.totalOverall
                             },
-                        });
-                        if (productDetailResponse.data) {
-                            this.productBy = productDetailResponse.data;
-                        }
-                        const reviewResponse = await $fetch(`/api/product/review/${productId}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Csrf-Token': csrfToken,
+                            performance: {
+                                label: 'Performance',
+                                average: this.ratingsCategories.averagePerformance,
+                                total: this.ratingsCategories.totalPerformance
                             },
-                        });
-                        if (reviewResponse.data && reviewResponse.data.error != 'No data') {
-                            this.ratingsCategories = reviewResponse.data;
-                            this.ratingCategories = {
-                                overall: {
-                                    label: 'Overall',
-                                    average: this.ratingsCategories.averageOverall,
-                                    total: this.ratingsCategories.totalOverall
-                                },
-                                performance: {
-                                    label: 'Performance',
-                                    average: this.ratingsCategories.averagePerformance,
-                                    total: this.ratingsCategories.totalPerformance
-                                },
-                                story: {
-                                    label: 'Story',
-                                    average: this.ratingsCategories.averageStory,
-                                    total: this.ratingsCategories.totalStory
-                                }
+                            story: {
+                                label: 'Story',
+                                average: this.ratingsCategories.averageStory,
+                                total: this.ratingsCategories.totalStory
                             }
                         }
                     }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
     }

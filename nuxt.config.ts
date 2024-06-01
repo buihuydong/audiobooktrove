@@ -70,6 +70,7 @@ export default defineNuxtConfig({
     'nuxt-security',
     'nuxt-time',
     "@nuxtjs/seo",
+    "nuxt-csurf"
   ],
   security: {
     rateLimiter: {
@@ -81,7 +82,6 @@ export default defineNuxtConfig({
       },
       throwError: true
     },
-    csrf: true,
     headers: {
       crossOriginEmbedderPolicy: process.env.NODE_ENV === 'development' ? 'unsafe-none' : 'require-corp',
       contentSecurityPolicy: false,

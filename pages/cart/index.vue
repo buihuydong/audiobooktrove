@@ -30,15 +30,12 @@ export default {
     },
     methods: {
         async handleApi() {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
+            const { $csrfFetch } = useNuxtApp();
                 try {
-                    const cartResponse = await $fetch(`/api/cart`, {
+                    const cartResponse = await $csrfFetch(`/api/cart`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
                         },
                     })
                     if (cartResponse.data) {
@@ -50,9 +47,6 @@ export default {
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
-            } else {
-                console.error('CSRF token not available');
-            }
         }
     }
 }

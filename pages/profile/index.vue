@@ -307,32 +307,26 @@ export default {
         },
         async handleDownloadFile(bucket, key) {
             this.isPendingFile[key] = true;
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const s3Response = await $fetch(`/api/services/S3ServiceUrl`, {
-                        method: 'POST',
-                        body: {
-                            'bucket': bucket,
-                            'key': key,
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    });
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const s3Response = await $csrfFetch(`/api/services/S3ServiceUrl`, {
+                    method: 'POST',
+                    body: {
+                        'bucket': bucket,
+                        'key': key,
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
 
-                    if (s3Response) {
-                        this.urls = s3Response;
-                        this.isPendingFile[key] = false;
-                        this.visibleDownload = true;
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+                if (s3Response) {
+                    this.urls = s3Response;
+                    this.isPendingFile[key] = false;
+                    this.visibleDownload = true;
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         async handleCreateReview() {
@@ -350,49 +344,43 @@ export default {
             } else {
                 this.isFailed = false;
                 this.isPendingSubmit = true;
-                const { csrf } = useCsrf();
-                const csrfToken = csrf;
-                if (csrfToken) {
-                    try {
-                        const reviewResponse = await $fetch(`/api/product/review`, {
-                            method: 'POST',
-                            body: {
-                                'overall': this.overall,
-                                'performance': this.performance,
-                                'story': this.story,
-                                'description': this.description,
-                                'idUser': idUser,
-                                'idProduct': this.idProduct
-                            },
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Csrf-Token': csrfToken,
-                            },
-                        })
+                const { $csrfFetch } = useNuxtApp();
+                try {
+                    const reviewResponse = await $csrfFetch(`/api/product/review`, {
+                        method: 'POST',
+                        body: {
+                            'overall': this.overall,
+                            'performance': this.performance,
+                            'story': this.story,
+                            'description': this.description,
+                            'idUser': idUser,
+                            'idProduct': this.idProduct
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
 
-                        if (reviewResponse.data.error) {
-                            this.isFailed = true;
-                            this.isPendingSubmit = false;
-                            this.messageError = 'Review already exists for this product and profile';
-                        }
-
-                        if (!reviewResponse.data.error) {
-                            this.isSuccess = true;
-                            this.isFailed = false;
-                            this.isPendingSubmit = false;
-                            const productIndex = this.transactions.findIndex(product => product.id === this.idProduct);
-                            if (productIndex !== -1) {
-                                this.transactions[productIndex].isReview = true;
-                            }
-                            setTimeout(() => {
-                                this.visible = false;
-                            }, 1000)
-                        }
-                    } catch (error) {
-                        console.error('Error fetching data:', error);
+                    if (reviewResponse.data.error) {
+                        this.isFailed = true;
+                        this.isPendingSubmit = false;
+                        this.messageError = 'Review already exists for this product and profile';
                     }
-                } else {
-                    console.error('CSRF token not available');
+
+                    if (!reviewResponse.data.error) {
+                        this.isSuccess = true;
+                        this.isFailed = false;
+                        this.isPendingSubmit = false;
+                        const productIndex = this.transactions.findIndex(product => product.id === this.idProduct);
+                        if (productIndex !== -1) {
+                            this.transactions[productIndex].isReview = true;
+                        }
+                        setTimeout(() => {
+                            this.visible = false;
+                        }, 1000)
+                    }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
                 }
             }
         },
@@ -434,61 +422,49 @@ export default {
         async handleTransaction() {
             this.isData = false;
             const user = useSupabaseUser();
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const transactionResponse = await $fetch(`/api/product/transaction/${user.value.id}`, {
-                        method: 'POST',
-                        body: {
-                            page: this.page,
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
-                    if (transactionResponse.data.error) {
-                        this.isEmpty = true;
-                        this.isData = true;
-                    } else {
-                        this.isEmpty = false;
-                    }
-
-                    if (transactionResponse.data) {
-                        this.transactions = transactionResponse.data.data.data;
-                        this.isData = true;
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const transactionResponse = await $csrfFetch(`/api/product/transaction/${user.value.id}`, {
+                    method: 'POST',
+                    body: {
+                        page: this.page,
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (transactionResponse.data.error) {
+                    this.isEmpty = true;
+                    this.isData = true;
+                } else {
+                    this.isEmpty = false;
                 }
-            } else {
-                console.error('CSRF token not available');
+
+                if (transactionResponse.data) {
+                    this.transactions = transactionResponse.data.data.data;
+                    this.isData = true;
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         async handleCountTransaction() {
             this.isData = false;
             const user = useSupabaseUser();
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const countProductResponse = await $fetch(`/api/product/transactionCount/${user.value.id}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const countProductResponse = await $csrfFetch(`/api/product/transactionCount/${user.value.id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
 
-                    if (countProductResponse.data) {
-                        this.totalRecords = countProductResponse.data.data;
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+                if (countProductResponse.data) {
+                    this.totalRecords = countProductResponse.data.data;
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         handleSlug(string) {

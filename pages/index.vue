@@ -67,43 +67,36 @@ export default {
       return item.data;
     },
     async handleApi() {
-      const { csrf } = useCsrf();
-      const csrfToken = csrf;
-      if (csrfToken) {
-        try {
-          const [heroResponse, productResponse] = await Promise.all([
-            $fetch('/api/hero', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Csrf-Token': csrfToken
-              }
-            }),
-            $fetch('/api/product/home', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Csrf-Token': csrfToken
-              }
-            })
-          ]);
+      const { $csrfFetch } = useNuxtApp();
+      try {
+        const [heroResponse, productResponse] = await Promise.all([
+          $csrfFetch('/api/hero', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          }),
+          $csrfFetch('/api/product/home', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+        ]);
 
-          if (heroResponse.data) {
-            this.hero = heroResponse.data.data;
-          }
-
-          if (productResponse.data) {
-            this.categories = productResponse.data.data.category;
-            this.products = productResponse.data.data.product;
-          }
-          
-          this.isData = true;
-
-        } catch (error) {
-          console.error('Error fetching data:', error);
+        if (heroResponse.data) {
+          this.hero = heroResponse.data.data;
         }
-      } else {
-        console.error('CSRF token not available');
+
+        if (productResponse.data) {
+          this.categories = productResponse.data.data.category;
+          this.products = productResponse.data.data.product;
+        }
+
+        this.isData = true;
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
     }
   }

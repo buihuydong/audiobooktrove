@@ -138,70 +138,63 @@ const layout = {
 
 const handleFinish = async (values: FormState) => {
     load.value = true;
-    const { csrf } = useCsrf();
-    const csrfToken = csrf;
-    if (csrfToken) {
-        try {
-            const response = await $fetch('/api/validateTurnstile', {
-                method: 'POST',
+    const { $csrfFetch } = useNuxtApp();
+    try {
+        const response = await $csrfFetch('/api/validateTurnstile', {
+            method: 'POST',
+            body: {
+                token: turnstile.value
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (response) {
+            const responseCheck = await $csrfFetch('/api/auth/email/check', {
+                method: 'post',
                 body: {
-                    token: turnstile.value
+                    email: formState.email
                 },
                 headers: {
                     'Content-Type': 'application/json',
-                    'Csrf-Token': csrfToken,
                 },
             });
 
-            if (response) {
-                const responseCheck = await $fetch('/api/auth/email/check', {
-                    method: 'post',
-                    body: {
-                        email: formState.email
-                    },
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Csrf-Token': csrfToken,
-                    },
-                });
-
-                if (responseCheck) {
-                    if (response.success) {
-                        const resultsignUp = signUpWithEmail(supabase, formState.email, formState.pass);
-                        resultsignUp.then((dataSignUp) => {
-                            load.value = false;
-                            if (dataSignUp) {
-                                success.value = true;
-                                setTimeout(() => {
-                                    success.value = false;
-                                    return navigateTo('/login');
-                                }, 1000);
-                            } else {
-                                failure.value = true;
-                                setTimeout(() => {
-                                    failure.value = false;
-                                }, 3000);
-                            }
-                        }).catch((error) => {
+            if (responseCheck) {
+                if (response.success) {
+                    const resultsignUp = signUpWithEmail(supabase, formState.email, formState.pass);
+                    resultsignUp.then((dataSignUp) => {
+                        load.value = false;
+                        if (dataSignUp) {
+                            success.value = true;
+                            setTimeout(() => {
+                                success.value = false;
+                                return navigateTo('/login');
+                            }, 1000);
+                        } else {
                             failure.value = true;
                             setTimeout(() => {
                                 failure.value = false;
                             }, 3000);
-                        });
-                    }
-                } else {
-                    load.value = false;
-                    failure.value = true;
-                    setTimeout(() => {
-                        failure.value = false;
-                    }, 3000);
+                        }
+                    }).catch((error) => {
+                        failure.value = true;
+                        setTimeout(() => {
+                            failure.value = false;
+                        }, 3000);
+                    });
                 }
+            } else {
+                load.value = false;
+                failure.value = true;
+                setTimeout(() => {
+                    failure.value = false;
+                }, 3000);
             }
-        } catch (error) {
-            console.error('Error fetching data:', error);
         }
-    } else {
-        console.error('CSRF token not available');
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
 };
 

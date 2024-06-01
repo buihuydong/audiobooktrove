@@ -78,7 +78,8 @@
                 type="error" />
         </div>
         <div class="flex pt-4 justify-between">
-            <Button v-if="totalPrice > 0" class="button_hero--secondary" @click="handleCartRemoveChecked()" aria-label="button checked">
+            <Button v-if="totalPrice > 0" class="button_hero--secondary" @click="handleCartRemoveChecked()"
+                aria-label="button checked">
                 <i class="pi pi-trash"></i>
                 <span class="text-sm">Delete checked</span>
             </Button>
@@ -158,95 +159,77 @@ export default {
                 this.productCart = this.productCart.filter(product => remainingItemIds.includes(product.id));
                 this.selectedProducts = this.selectedProducts.filter(id => remainingItemIds.includes(id));
                 this.countCart = this.productCart.length;
-                const { csrf } = useCsrf();
-                const csrfToken = csrf;
-                if (csrfToken) {
-                    try {
-                        const cartResponse = await $fetch('/api/cart/all', {
-                            method: 'DELETE',
-                            body: {
-                                ids: checkedItemIds,
-                            },
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Csrf-Token': csrfToken,
-                            },
-                        })
+                const { $csrfFetch } = useNuxtApp();
+                try {
+                    const cartResponse = await $csrfFetch('/api/cart/all', {
+                        method: 'DELETE',
+                        body: {
+                            ids: checkedItemIds,
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
 
-                        if (cartResponse.statusCode == 200) {
-                            console.log(cartResponse);
-                            this.updateTotalPrice();
-                            this.handleRemoveCart();
-                        }
-                    } catch (error) {
-                        console.error('Error fetching data:', error);
+                    if (cartResponse.statusCode == 200) {
+                        console.log(cartResponse);
+                        this.updateTotalPrice();
+                        this.handleRemoveCart();
                     }
-                } else {
-                    console.error('CSRF token not available');
+                } catch (error) {
+                    console.error('Error fetching data:', error);
                 }
             }
         },
         async handleApiCartRemove(productId) {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const cartResponse = await $fetch('/api/cart', {
-                        method: 'DELETE',
-                        body: {
-                            id: productId,
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
-                    if (cartResponse.statusCode == 200) {
-                        this.productCart = this.productCart.filter(product => product.id !== productId);
-                        this.countCart = this.productCart.length;
-                        this.selectedProducts = this.selectedProducts.filter(id => id !== productId);
-                        this.updateTotalPrice();
-                        const cartCookie = useCookie('cart');
-                        this.handleRemoveCart(cartCookie.value.length);
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const cartResponse = await $csrfFetch('/api/cart', {
+                    method: 'DELETE',
+                    body: {
+                        id: productId,
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (cartResponse.statusCode == 200) {
+                    this.productCart = this.productCart.filter(product => product.id !== productId);
+                    this.countCart = this.productCart.length;
+                    this.selectedProducts = this.selectedProducts.filter(id => id !== productId);
+                    this.updateTotalPrice();
+                    const cartCookie = useCookie('cart');
+                    this.handleRemoveCart(cartCookie.value.length);
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         async handleApiCart() {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const cartResponse = await $fetch('/api/cart/products', {
-                        method: 'POST',
-                        body: {
-                            ids: this.products,
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
-                    if (cartResponse.data) {
-                        this.productCart = cartResponse.data.data;
-                        this.countCart = this.productCart.length;
-                        this.isDataProduct = true;
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const cartResponse = await $csrfFetch('/api/cart/products', {
+                    method: 'POST',
+                    body: {
+                        ids: this.products,
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (cartResponse.data) {
+                    this.productCart = cartResponse.data.data;
+                    this.countCart = this.productCart.length;
+                    this.isDataProduct = true;
 
-                        if (cartResponse.data.data.length == 0) {
-                            this.isEmpty = true;
-                        } else {
-                            this.isEmpty = false;
-                        }
+                    if (cartResponse.data.data.length == 0) {
+                        this.isEmpty = true;
+                    } else {
+                        this.isEmpty = false;
                     }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         handleRemoveCart(number) {
@@ -254,7 +237,7 @@ export default {
                 const cartCookie = useCookie('cart');
                 number = cartCookie.value.length;
             }
-            if(number == 0) {
+            if (number == 0) {
                 this.isEmpty = true;
             } else {
                 this.isEmpty = false;
@@ -266,25 +249,19 @@ export default {
             return $createSlug(string);
         },
         async handlePromotion() {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const promotionResponse = await $fetch('/api/promotion', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
-                    if (promotionResponse.data) {
-                        this.promotion = promotionResponse.data.data;
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const promotionResponse = await $csrfFetch('/api/promotion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (promotionResponse.data) {
+                    this.promotion = promotionResponse.data.data;
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         promotionStyle(product) {
@@ -312,27 +289,23 @@ export default {
         async handlePayment() {
             this.isPendingPay = true;
             const user = useSupabaseUser();
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                const response = await $fetch('/api/payment/adHoc', {
-                    method: "POST",
-                    body: {
-                        'ids': this.selectedProducts,
-                        'email': user.value.email
-                    },
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Csrf-Token': csrfToken,
-                    },
-                });
+            const { $csrfFetch } = useNuxtApp();
+            const response = await $csrfFetch('/api/payment/adHoc', {
+                method: "POST",
+                body: {
+                    'ids': this.selectedProducts,
+                    'email': user.value.email
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-                if (response) {
-                    window.location.href = response.url;
-                } else {
-                    this.isPendingPay = false;
-                    this.existProduct = true;
-                }
+            if (response) {
+                window.location.href = response.url;
+            } else {
+                this.isPendingPay = false;
+                this.existProduct = true;
             }
         }
     }

@@ -146,56 +146,50 @@ const layout = {
 
 const handleFinish = async (values: FormState) => {
     load.value = true;
-    const { csrf } = useCsrf();
-    const csrfToken = csrf;
-    if (csrfToken) {
-        try {
-            const response = await $fetch('/api/validateTurnstile', {
-                method: 'POST',
-                body: {
-                    token: turnstile.value
-                },
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Csrf-Token': csrfToken,
-                },
-            });
+    const { $csrfFetch } = useNuxtApp();
+    try {
+        const response = await $csrfFetch('/api/validateTurnstile', {
+            method: 'POST',
+            body: {
+                token: turnstile.value
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-            if (response.success) {
-                const result = signInWithEmail(supabase, formState.email, formState.pass);
-                result.then(async (value) => {
-                    load.value = false;
-                    if (value.user) {
-                        success.value = true;
-                        if (formState.remember) {
-                            let data = {
-                                email: formState.email,
-                                password: formState.pass
-                            };
+        if (response.success) {
+            const result = signInWithEmail(supabase, formState.email, formState.pass);
+            result.then(async (value) => {
+                load.value = false;
+                if (value.user) {
+                    success.value = true;
+                    if (formState.remember) {
+                        let data = {
+                            email: formState.email,
+                            password: formState.pass
+                        };
 
-                            const response = await useCsrfFetch('/api/auth/remember', {
-                                method: 'post',
-                                body: data
-                            });
-                        }
-
-                        setTimeout(() => {
-                            success.value = false;
-                            return navigateTo('/');
-                        }, 1000);
-                    } else {
-                        failure.value = true;
-                        setTimeout(() => {
-                            failure.value = false;
-                        }, 3000);
+                        const response = await useCsrfFetch('/api/auth/remember', {
+                            method: 'post',
+                            body: data
+                        });
                     }
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching data:', error);
+
+                    setTimeout(() => {
+                        success.value = false;
+                        return navigateTo('/');
+                    }, 1000);
+                } else {
+                    failure.value = true;
+                    setTimeout(() => {
+                        failure.value = false;
+                    }, 3000);
+                }
+            });
         }
-    } else {
-        console.error('CSRF token not available');
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
 };
 

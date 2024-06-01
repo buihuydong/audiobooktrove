@@ -72,11 +72,11 @@
                     </div>
                     <div class="text-sm text-left font-normal my-2">
                         <span class="text-sub">By: </span>
-                            <span class="text-main border-b-[1px] border-orange-500">{{ product.by }}</span>
+                        <span class="text-main border-b-[1px] border-orange-500">{{ product.by }}</span>
                     </div>
                     <div class="text-sm text-left font-normal my-2">
                         <span class="text-sub">Narrated by: </span>
-                            <span class="text-main border-b-[1px] border-orange-500">{{ product.narrated_by }}</span>
+                        <span class="text-main border-b-[1px] border-orange-500">{{ product.narrated_by }}</span>
                     </div>
                     <div class="text-sm text-left font-normal my-2">
                         <span class="text-sub">Length:</span> {{ product.length }}
@@ -89,7 +89,7 @@
                     </div>
                     <div class="text-sm text-left font-normal my-2">
                         <span class="text-sub">Publisher: </span>
-                            <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher }}</span>
+                        <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher }}</span>
                     </div>
                 </div>
             </div>
@@ -121,7 +121,8 @@
                         </div>
                     </span>
                 </Button>
-                <Button class="BuyBtn my-1 w-full justify-center shadow" @click="handleBuyNow(product)" aria-label="button buy now">
+                <Button class="BuyBtn my-1 w-full justify-center shadow" @click="handleBuyNow(product)"
+                    aria-label="button buy now">
                     <span class="IconContainer">
                         <IconsSend class="text-white" />
                     </span>
@@ -258,25 +259,19 @@ export default {
             return $createSlug(string);
         },
         async handlePromotion() {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const promotionResponse = await $fetch('/api/promotion', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
-                    if (promotionResponse.data) {
-                        this.promotion = promotionResponse.data.data;
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const promotionResponse = await $csrfFetch('/api/promotion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (promotionResponse.data) {
+                    this.promotion = promotionResponse.data.data;
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         promotionStyle(product) {
@@ -295,83 +290,65 @@ export default {
             };
         },
         async handleCheckCart() {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const cartResponse = await $fetch('/api/cart', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
-                    if (cartResponse.data) {
-                        const cart = JSON.parse(cartResponse.data);
-                        cart.forEach(item => {
-                            this.addCart[item.id] = true;
-                        });
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const cartResponse = await $csrfFetch('/api/cart', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (cartResponse.data) {
+                    const cart = JSON.parse(cartResponse.data);
+                    cart.forEach(item => {
+                        this.addCart[item.id] = true;
+                    });
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         async handleAddToCart(product) {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const productResponse = await $fetch('/api/cart', {
-                        method: 'POST',
-                        body: {
-                            id: product.id
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
-                    if (productResponse) {
-                        this.addCart[product.id] = true;
-                        const cartCookie = useCookie('cart');
-                        this.$store.dispatch('addToCart', cartCookie.value.length);
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const productResponse = await $csrfFetch('/api/cart', {
+                    method: 'POST',
+                    body: {
+                        id: product.id
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (productResponse) {
+                    this.addCart[product.id] = true;
+                    const cartCookie = useCookie('cart');
+                    this.$store.dispatch('addToCart', cartCookie.value.length);
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         async handleBuyNow(product) {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const productResponse = await $fetch('/api/cart', {
-                        method: 'POST',
-                        body: {
-                            id: product.id
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
-                    if (productResponse) {
-                        this.addCart[product.id] = true;
-                        const cartCookie = useCookie('cart');
-                        this.$store.dispatch('addToCart', cartCookie.value.length);
-                        this.$router.push('/cart');
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const productResponse = await $csrfFetch('/api/cart', {
+                    method: 'POST',
+                    body: {
+                        id: product.id
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (productResponse) {
+                    this.addCart[product.id] = true;
+                    const cartCookie = useCookie('cart');
+                    this.$store.dispatch('addToCart', cartCookie.value.length);
+                    this.$router.push('/cart');
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         handleExpired(productId) {

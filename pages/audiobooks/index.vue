@@ -89,7 +89,7 @@
         <Sidebar v-model:visible="visibleRight" position="left">
             <template #header>
                 <NuxtLink to="/">
-                    <NuxtImg class="h-12 md:h-16" :src="logoSrc" />
+                    <img class="h-12 md:h-16" :src="logo" alt="logo" />
                 </NuxtLink>
             </template>
             <div class="lg:basis-3/12">
@@ -145,6 +145,7 @@
 </template>
 
 <script>
+import logo from '@/assets/image/logo.png';
 export default {
     setup() {
         definePageMeta({
@@ -164,12 +165,8 @@ export default {
             isEmpty: false,
             totalRecords: 0,
             visibleRight: false,
+            logo: logo
         };
-    },
-    computed: {
-        logoSrc() {
-            return this.isLogo ? '/logo_white.png' : '/logo.png';
-        },
     },
     watch: {
         '$route'(to, from) {
@@ -241,130 +238,106 @@ export default {
             this.handleApiProductParam(page, category, sort, keyword);
         },
         async handleApiProduct() {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const productResponse = await $fetch('/api/product', {
-                        method: 'POST',
-                        body: {
-                            page: this.page,
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const productResponse = await $csrfFetch('/api/product', {
+                    method: 'POST',
+                    body: {
+                        page: this.page,
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
 
-                    if (productResponse.data.error) {
-                        this.isEmpty = true;
-                        this.isData = true;
-                        this.isDataProduct = true;
-                        return;
-                    } else {
-                        this.isEmpty = false;
-                    }
-
-                    if (productResponse.data) {
-                        this.products = productResponse.data;
-                        this.isData = true;
-                        this.isDataProduct = true;
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+                if (productResponse.data.error) {
+                    this.isEmpty = true;
+                    this.isData = true;
+                    this.isDataProduct = true;
+                    return;
+                } else {
+                    this.isEmpty = false;
                 }
-            } else {
-                console.error('CSRF token not available');
+
+                if (productResponse.data) {
+                    this.products = productResponse.data;
+                    this.isData = true;
+                    this.isDataProduct = true;
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         async handleApiCategory() {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const categoryResponse = await $fetch('/api/category', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const categoryResponse = await $csrfFetch('/api/category', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
 
-                    if (categoryResponse.data) {
-                        this.categories = this.formatTreeData(categoryResponse.data.data);
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+                if (categoryResponse.data) {
+                    this.categories = this.formatTreeData(categoryResponse.data.data);
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         async handleApiCount() {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const countProductResponse = await $fetch('/api/paginator', {
-                        method: 'POST',
-                        body: {
-                            category: this.category,
-                            name: this.keyWord
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const countProductResponse = await $csrfFetch('/api/paginator', {
+                    method: 'POST',
+                    body: {
+                        category: this.category,
+                        name: this.keyWord
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
 
-                    if (countProductResponse.data) {
-                        this.totalRecords = countProductResponse.data.data;
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+                if (countProductResponse.data) {
+                    this.totalRecords = countProductResponse.data.data;
                 }
-            } else {
-                console.error('CSRF token not available');
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         async handleApiProductParam(page, category, sort, keyword) {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
-                try {
-                    const productResponse = await $fetch('/api/product', {
-                        method: 'POST',
-                        body: {
-                            page: page,
-                            category: category,
-                            sort: sort,
-                            keyword: keyword
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
-                        },
-                    })
+            const { $csrfFetch } = useNuxtApp();
+            try {
+                const productResponse = await $csrfFetch('/api/product', {
+                    method: 'POST',
+                    body: {
+                        page: page,
+                        category: category,
+                        sort: sort,
+                        keyword: keyword
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
 
-                    if (productResponse.data.error == 'No data') {
-                        this.isEmpty = true;
-                        this.isData = true;
-                        this.isDataProduct = true;
-                        return;
-                    } else {
-                        this.isEmpty = false;
-                    }
-
-                    if (productResponse.data) {
-                        this.products = productResponse.data;
-                        this.isData = true;
-                        this.isDataProduct = true;
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+                if (productResponse.data.error == 'No data') {
+                    this.isEmpty = true;
+                    this.isData = true;
+                    this.isDataProduct = true;
+                    return;
+                } else {
+                    this.isEmpty = false;
                 }
-            } else {
-                console.error('CSRF token not available');
+
+                if (productResponse.data) {
+                    this.products = productResponse.data;
+                    this.isData = true;
+                    this.isDataProduct = true;
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
         },
         formatTreeData(data) {

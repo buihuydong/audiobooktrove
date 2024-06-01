@@ -9,15 +9,15 @@
                             <img class="h-10 md:h-14" :src="logo" alt="logo" />
                         </div>
                     </div>
-                    <div class="col-span-12 lg:col-span-10 mt-5 lg:mt-0">
-                        <div class="grid grid-cols-1 gap-6 pb-16 lg:grid-cols-3 pl-0 lg:pl-16">
+                    <div class="col-span-12 lg:col-span-10 mt-1 lg:mt-0">
+                        <div class="grid grid-cols-1 gap-1 pb-16 lg:grid-cols-3 pl-0 lg:pl-16">
                             <div>
-                                <div class="text-lg font-medium text-black border-b-[1px] py-2 border-black">About US
+                                <div class="text-sm lg:text-base font-bold lg:font-medium text-black border-b-[1px] py-2 border-black">About US
                                 </div>
                                 <div class="mt-2 text-sm" v-html="aboutUs"></div>
                             </div>
                             <div>
-                                <div class="text-lg font-medium text-black border-b-[1px] py-2 border-black">Category
+                                <div class="text-sm lg:text-base font-bold lg:font-medium text-black border-b-[1px] py-2 border-black">Category
                                 </div>
                                 <NuxtLink class="hover:text-orange-500 duration-200"
                                     :to="'/audiobooks?category=' + handleSlug(category.name)"
@@ -28,7 +28,7 @@
                                 </NuxtLink>
                             </div>
                             <div>
-                                <div class="text-lg font-medium text-black border-b-[1px] py-2 border-black">Contact
+                                <div class="text-sm lg:text-base font-bold lg:font-medium text-black border-b-[1px] py-2 border-black">Contact
                                 </div>
                                 <div v-if="contact.email" class="flex items-center gap-2 mt-2">
                                     <IconsMail />
@@ -79,14 +79,13 @@ export default {
         const categories = ref([]);
         const aboutUs = ref(null);
         const contact = ref([]);
-
-        const fetchData = async (url, csrfToken) => {
+        const { $csrfFetch } = useNuxtApp();
+        const fetchData = async (url) => {
             try {
-                const response = await $fetch(url, {
+                const response = await $csrfFetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Csrf-Token': csrfToken,
                     },
                 });
                 return response;
@@ -129,19 +128,12 @@ export default {
             if (cachedContact) contact.value = cachedContact;
 
             if (!cachedCategories || !cachedAboutUs || !cachedContact) {
-                const { csrf } = useCsrf();
-                const csrfToken = csrf;
-
-                if (!csrfToken) {
-                    console.error('CSRF token not available');
-                    return;
-                }
 
                 try {
                     const [categoryResponse, aboutUsResponse, contactResponse] = await Promise.all([
-                        fetchData('/api/category/home', csrfToken),
-                        fetchData('/api/aboutUs', csrfToken),
-                        fetchData('/api/contact', csrfToken)
+                        fetchData('/api/category/home'),
+                        fetchData('/api/aboutUs'),
+                        fetchData('/api/contact')
                     ]);
 
                     if (categoryResponse?.data) {

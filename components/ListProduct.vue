@@ -261,15 +261,12 @@ export default {
             return $createSlug(string);
         },
         async handlePromotion() {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
+            const { $csrfFetch } = useNuxtApp();
                 try {
-                    const promotionResponse = await $fetch('/api/promotion', {
+                    const promotionResponse = await $csrfFetch('/api/promotion', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
                         },
                     })
                     if (promotionResponse.data) {
@@ -278,9 +275,6 @@ export default {
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
-            } else {
-                console.error('CSRF token not available');
-            }
         },
         promotionStyle(product) {
             if (!this.promotion) return {};
@@ -298,15 +292,12 @@ export default {
             };
         },
         async handleCheckCart() {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
+            const { $csrfFetch } = useNuxtApp();
                 try {
-                    const cartResponse = await $fetch('/api/cart', {
+                    const cartResponse = await $csrfFetch('/api/cart', {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
                         },
                     })
                     if (cartResponse.data) {
@@ -318,23 +309,17 @@ export default {
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
-            } else {
-                console.error('CSRF token not available');
-            }
         },
         async handleAddToCart(product) {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
+            const { $csrfFetch } = useNuxtApp();
                 try {
-                    const productResponse = await $fetch('/api/cart', {
+                    const productResponse = await $csrfFetch('/api/cart', {
                         method: 'POST',
                         body: {
                             id: product.id
                         },
                         headers: {
                             'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
                         },
                     })
                     if (productResponse) {
@@ -345,23 +330,17 @@ export default {
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
-            } else {
-                console.error('CSRF token not available');
-            }
         },
         async handleBuyNow(product) {
-            const { csrf } = useCsrf();
-            const csrfToken = csrf;
-            if (csrfToken) {
+            const { $csrfFetch } = useNuxtApp();
                 try {
-                    const productResponse = await $fetch('/api/cart', {
+                    const productResponse = await $csrfFetch('/api/cart', {
                         method: 'POST',
                         body: {
                             id: product.id
                         },
                         headers: {
                             'Content-Type': 'application/json',
-                            'Csrf-Token': csrfToken,
                         },
                     })
                     if (productResponse) {
@@ -373,9 +352,6 @@ export default {
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
-            } else {
-                console.error('CSRF token not available');
-            }
         },
         handleExpired(productId) {
             const promotion = this.products.data.data.find(p => p.id === productId);
