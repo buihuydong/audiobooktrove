@@ -83,8 +83,8 @@ export default defineEventHandler(async (event) => {
             payment_method_types: ['card'],
             line_items: products,
             mode: 'payment',
-            success_url: 'http://localhost:3000/profile',
-            cancel_url: 'http://localhost:3000/cart',
+            success_url: 'https://audiobooktrove.com/profile',
+            cancel_url: 'https://audiobooktrove.com/cart',
         });
         
         if (session) {
