@@ -76,6 +76,12 @@ export default defineNuxtConfig({
   csurf: {
     https: true,
     cookieKey: 'csrf',
+    cookie: {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'strict'
+    },
+    encryptAlgorithm: 'AES-CBC',
     addCsrfTokenToEventCtx: true
   },
   security: {
