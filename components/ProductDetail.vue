@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-wrap gap-0 bg-white rounded-md shadow my-3">
-        <div class="rounded-md overflow-hidden p-3 basis-full bg-white flex gap-3">
+    <div class="flex flex-wrap gap-0 bg-white rounded-md shadow my-3 p-3">
+        <div class="rounded-md overflow-hidden basis-full bg-white flex gap-3">
             <div class="flex gap-3 basis-full md:basis-7/12 lg:basis-9/12 items-start">
                 <div class="flex flex-col justify-center gap-2 relative">
                     <div class="rounded-md w-40 h-40 lg:w-60 lg:h-60 shadow overflow-hidden card_box_detail"
@@ -59,7 +59,7 @@
             </div>
             <div class="hidden lg:block md:basis-5/12 lg:basis-3/12">
                 <div
-                    class="text-sm text-center text-nowrap my-2 font-medium px-1 py-2 bg-white border-4 border-dashed border-orange-500 rounded-full text-black shadow-md">
+                    class="text-sm text-center text-nowrap my-2 font-medium px-1 py-2 bg-white border-[1px] border-orange-500 rounded-full text-black shadow-md">
                     <div :class="{ 'line-through text-sub': discountedPrice[product.id] && !promotionExpired }">
                         Regular price ${{ product.price }}</div>
                     <div v-if="discountedPrice[product.id]" :class="{ 'line-through text-sub': promotionExpired }">
@@ -94,15 +94,17 @@
                 </Button>
             </div>
         </div>
-        <div class="lg:hidden block p-2 w-full" v-if="countDown[product.id]">
+        <div class="w-full lg:hidden block mt-2">
             <div
-                class="text-xs text-center text-nowrap my-2 font-medium px-1 py-2 bg-white border-[1px] border-orange-500 rounded-full text-black shadow-md">
+                class="text-xs text-center text-nowrap font-medium px-1 py-2 bg-white border-[1px] border-orange-500 rounded-full text-black shadow-md w-full">
                 <div :class="{ 'line-through text-sub': discountedPrice[product.id] && !promotionExpired }">
                     Regular price ${{ product.price }}</div>
                 <div v-if="discountedPrice[product.id]" :class="{ 'line-through text-sub': promotionExpired }">
                     Reduced to ${{
                         discountedPrice[product.id] }}</div>
             </div>
+        </div>
+        <div class="lg:hidden block w-full mt-1" v-if="countDown[product.id]">
             <Countdown class="text-center" :endTime="countDown[product.id]" :productId="product.id"
                 @expired="handleExpired" />
         </div>

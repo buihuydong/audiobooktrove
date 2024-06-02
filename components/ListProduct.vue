@@ -1,147 +1,164 @@
 <template>
     <div class="flex flex-wrap gap-3">
         <div v-if="products.data" v-for="product in products.data.data" :key="product.id"
-            class="rounded-md overflow-hidden p-2 basis-full bg-white shadow flex gap-3"
+            class="rounded-md overflow-hidden p-2 basis-full bg-white shadow "
             :style="promotionStyle(product)">
-            <div class="flex gap-3 basis-full lg:basis-8/12 items-start">
-                <div class="flex flex-col justify-center gap-2 relative">
-                    <a-tooltip placement="right" color="#fafafa" class="hidden lg:block">
-                        <template #title>
-                            <div class="p-1">
-                                <div class="text-sm text-left font-semibold my-2 text-black">
-                                    {{ product.name }}
+            <div class="flex gap-3">
+                <div class="flex gap-3 basis-full lg:basis-8/12 items-start">
+                    <div class="flex flex-col justify-center gap-2 relative">
+                        <a-tooltip placement="right" color="#fafafa" class="hidden lg:block">
+                            <template #title>
+                                <div class="p-1">
+                                    <div class="text-sm text-left font-semibold my-2 text-black">
+                                        {{ product.name }}
+                                    </div>
+                                    <div class="text-sm text-left font-normal my-2">
+                                        <span class="text-sub">By: </span>
+                                        <span class="text-main border-b-[1px] border-orange-500">{{ product.by }}</span>
+                                    </div>
+                                    <div class="text-sm text-left font-normal my-2">
+                                        <span class="text-sub">Narrated by: </span>
+                                        <span class="text-main border-b-[1px] border-orange-500">{{ product.narrated_by
+                                            }}</span>
+                                    </div>
+                                    <div v-if="product.series && product.series_number"
+                                        class="text-sm text-left font-normal my-2">
+                                        <span class="text-sub">Series: </span>
+                                        <span class="text-main border-b-[1px] border-orange-500">
+                                            {{ product.series }}, {{ product.series_number }}
+                                        </span>
+                                    </div>
+                                    <div class="text-sm text-left font-normal my-2 text-black">
+                                        <span class="text-sub">Length:</span> {{ product.length }}
+                                    </div>
+                                    <div class="text-sm text-left font-normal my-2 text-black">
+                                        <span class="text-sub">Release date:</span> {{ formatDate(product.release_date)
+                                        }}
+                                    </div>
+                                    <div class="text-sm text-left font-normal my-2 text-black">
+                                        <span class="text-sub">Language:</span> {{ product.language }}
+                                    </div>
+                                    <div class="text-sm text-left font-normal my-2">
+                                        <span class="text-sub">Publisher: </span>
+                                        <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher
+                                            }}</span>
+                                    </div>
+                                    <div class="text-sm text-left font-normal my-2 text-black">
+                                        <span class="text-sub">Description:</span>
+                                        <p v-html="product.description"></p>
+                                    </div>
                                 </div>
-                                <div class="text-sm text-left font-normal my-2">
-                                    <span class="text-sub">By: </span>
-                                    <span class="text-main border-b-[1px] border-orange-500">{{ product.by }}</span>
-                                </div>
-                                <div class="text-sm text-left font-normal my-2">
-                                    <span class="text-sub">Narrated by: </span>
-                                    <span class="text-main border-b-[1px] border-orange-500">{{ product.narrated_by
-                                        }}</span>
-                                </div>
-                                <div v-if="product.series && product.series_number"
-                                    class="text-sm text-left font-normal my-2">
-                                    <span class="text-sub">Series: </span>
-                                    <span class="text-main border-b-[1px] border-orange-500">
-                                        {{ product.series }}, {{ product.series_number }}
-                                    </span>
-                                </div>
-                                <div class="text-sm text-left font-normal my-2 text-black">
-                                    <span class="text-sub">Length:</span> {{ product.length }}
-                                </div>
-                                <div class="text-sm text-left font-normal my-2 text-black">
-                                    <span class="text-sub">Release date:</span> {{ formatDate(product.release_date) }}
-                                </div>
-                                <div class="text-sm text-left font-normal my-2 text-black">
-                                    <span class="text-sub">Language:</span> {{ product.language }}
-                                </div>
-                                <div class="text-sm text-left font-normal my-2">
-                                    <span class="text-sub">Publisher: </span>
-                                    <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher
-                                        }}</span>
-                                </div>
-                                <div class="text-sm text-left font-normal my-2 text-black">
-                                    <span class="text-sub">Description:</span>
-                                    <p v-html="product.description"></p>
-                                </div>
-                            </div>
-                        </template>
+                            </template>
+                            <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)"
+                                class="rounded-md  w-48 h-48 overflow-hidden shadow card_box">
+                                <img :src="product.image" class="w-full h-full object-cover" :alt="product.name" />
+                            </NuxtLink>
+                        </a-tooltip>
                         <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)"
-                            class="rounded-md  w-48 h-48 overflow-hidden shadow card_box">
+                            class="rounded-md w-40 h-40 lg:w-48 lg:h-48 overflow-hidden shadow block lg:hidden card_box">
                             <img :src="product.image" class="w-full h-full object-cover" :alt="product.name" />
                         </NuxtLink>
-                    </a-tooltip>
-                    <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)"
-                        class="rounded-md w-40 h-40 lg:w-48 lg:h-48 overflow-hidden shadow block lg:hidden card_box">
-                        <img :src="product.image" class="w-full h-full object-cover" :alt="product.name" />
-                    </NuxtLink>
-                    <Button :disabled="isLoad[product.audio_object_key]"
-                        @click.prevent="toggleAudio(product.audio_object_key)"
-                        class="button-row shadow cursor-pointer p-2 rounded-md" aria-label="button play audio">
-                        <div :class="{ 'is-active': isActive[product.audio_object_key] }"
-                            class="shadow button-au | button-au--toggle button-au--play">
-                            <IconsPlay class="ph-play" />
-                            <IconsPause class="ph-pause" />
+                        <Button :disabled="isLoad[product.audio_object_key]"
+                            @click.prevent="toggleAudio(product.audio_object_key)"
+                            class="button-row shadow cursor-pointer p-2 rounded-md" aria-label="button play audio">
+                            <div :class="{ 'is-active': isActive[product.audio_object_key] }"
+                                class="shadow button-au | button-au--toggle button-au--play">
+                                <IconsPlay class="ph-play" />
+                                <IconsPause class="ph-pause" />
+                            </div>
+                            <div v-if="!isLoad[product.audio_object_key]" class="text-xs">
+                                {{ sampleTime[product.audio_object_key] === undefined ? 'Sample' :
+                                    sampleTime[product.audio_object_key] }}
+                            </div>
+                            <div v-if="isLoad[product.audio_object_key]">
+                                <IconsTadpole />
+                            </div>
+                        </Button>
+                    </div>
+                    <div class="">
+                        <div class="text-lg text-left font-semibold">
+                            {{ product.name }}
                         </div>
-                        <div v-if="!isLoad[product.audio_object_key]" class="text-xs">
-                            {{ sampleTime[product.audio_object_key] === undefined ? 'Sample' :
-                                sampleTime[product.audio_object_key] }}
+                        <div class="text-sm text-left font-normal my-2">
+                            <span class="text-sub">By: </span>
+                            <span class="text-main border-b-[1px] border-orange-500">{{ product.by }}</span>
                         </div>
-                        <div v-if="isLoad[product.audio_object_key]">
-                            <IconsTadpole />
+                        <div class="text-sm text-left font-normal my-2">
+                            <span class="text-sub">Narrated by: </span>
+                            <span class="text-main border-b-[1px] border-orange-500">{{ product.narrated_by }}</span>
                         </div>
+                        <div v-if="product.series && product.series_number" class="text-sm text-left font-normal my-2">
+                            <span class="text-sub">Series: </span>
+                            <span class="text-main border-b-[1px] border-orange-500">
+                                {{ product.series }}, {{ product.series_number }}
+                            </span>
+                        </div>
+                        <div class="text-sm text-left font-normal my-2">
+                            <span class="text-sub">Length:</span> {{ product.length }}
+                        </div>
+                        <div class="text-sm text-left font-normal my-2">
+                            <span class="text-sub">Release date:</span> {{ formatDate(product.release_date) }}
+                        </div>
+                        <div class="text-sm text-left font-normal my-2">
+                            <span class="text-sub">Language:</span> {{ product.language }}
+                        </div>
+                        <div class="text-sm text-left font-normal my-2">
+                            <span class="text-sub">Publisher: </span>
+                            <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden lg:block lg:basis-4/12">
+                    <div
+                        class="text-sm text-center text-nowrap my-2 font-medium px-1 py-2 bg-white border-[1px] border-orange-500 rounded-full text-black shadow-md">
+                        <div
+                            :class="{ 'line-through text-sub': discountedPrice[product.id] && !promotionExpired[product.id] }">
+                            Regular
+                            price ${{ product.price }}</div>
+                        <div v-if="discountedPrice[product.id]"
+                            :class="{ 'line-through text-sub': promotionExpired[product.id] }">
+                            Reduced to ${{ discountedPrice[product.id] }}</div>
+                    </div>
+                    <div class="" v-if="countDown[product.id]">
+                        <Countdown :endTime="countDown[product.id]" :productId="product.id" @expired="handleExpired" />
+                    </div>
+                    <Button :disabled="addCart[product.id]" class="CartBtn my-1 w-full justify-center shadow"
+                        @click="handleAddToCart(product)" aria-label="button add to cart">
+                        <span class="IconContainer">
+                            <IconsCart class="text-black" />
+                        </span>
+                        <span class="text-sm text-black text-nowrap">
+                            <div class="" v-if="!addCart[product.id]">
+                                Add to cart
+                            </div>
+                            <div class="flex items-center gap-2" v-if="addCart[product.id]">
+                                <IconsCart class="text-black" />In cart
+                            </div>
+                        </span>
+                    </Button>
+                    <Button class="BuyBtn my-1 w-full justify-center shadow" @click="handleBuyNow(product)">
+                        <span class="IconContainer" aria-label="button buy now">
+                            <IconsSend class="text-white" />
+                        </span>
+                        <span class="text-sm text-white text-nowrap">
+                            Buy now
+                        </span>
                     </Button>
                 </div>
-                <div class="">
-                    <div class="text-lg text-left font-semibold">
-                        {{ product.name }}
-                    </div>
-                    <div class="text-sm text-left font-normal my-2">
-                        <span class="text-sub">By: </span>
-                        <span class="text-main border-b-[1px] border-orange-500">{{ product.by }}</span>
-                    </div>
-                    <div class="text-sm text-left font-normal my-2">
-                        <span class="text-sub">Narrated by: </span>
-                        <span class="text-main border-b-[1px] border-orange-500">{{ product.narrated_by }}</span>
-                    </div>
-                    <div v-if="product.series && product.series_number" class="text-sm text-left font-normal my-2">
-                        <span class="text-sub">Series: </span>
-                        <span class="text-main border-b-[1px] border-orange-500">
-                            {{ product.series }}, {{ product.series_number }}
-                        </span>
-                    </div>
-                    <div class="text-sm text-left font-normal my-2">
-                        <span class="text-sub">Length:</span> {{ product.length }}
-                    </div>
-                    <div class="text-sm text-left font-normal my-2">
-                        <span class="text-sub">Release date:</span> {{ formatDate(product.release_date) }}
-                    </div>
-                    <div class="text-sm text-left font-normal my-2">
-                        <span class="text-sub">Language:</span> {{ product.language }}
-                    </div>
-                    <div class="text-sm text-left font-normal my-2">
-                        <span class="text-sub">Publisher: </span>
-                        <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher }}</span>
-                    </div>
+            </div>
+            <div class="w-full lg:hidden block mt-2">
+                <div
+                    class="text-xs text-center text-nowrap font-medium px-1 py-2 bg-white border-[1px] border-orange-500 rounded-full text-black shadow-md w-full">
+                    <div :class="{ 'line-through text-sub': discountedPrice[product.id] && !promotionExpired }">
+                        Regular price ${{ product.price }}</div>
+                    <div v-if="discountedPrice[product.id]" :class="{ 'line-through text-sub': promotionExpired }">
+                        Reduced to ${{
+                            discountedPrice[product.id] }}</div>
                 </div>
             </div>
-            <div class="hidden lg:block lg:basis-4/12">
-                <div
-                    class="text-sm text-center text-nowrap my-2 font-medium px-1 py-2 bg-white border-4 border-dashed border-orange-500 rounded-full text-black shadow-md">
-                    <div
-                        :class="{ 'line-through text-sub': discountedPrice[product.id] && !promotionExpired[product.id] }">
-                        Regular
-                        price ${{ product.price }}</div>
-                    <div v-if="discountedPrice[product.id]"
-                        :class="{ 'line-through text-sub': promotionExpired[product.id] }">
-                        Reduced to ${{ discountedPrice[product.id] }}</div>
-                </div>
-                <div class="" v-if="countDown[product.id]">
-                    <Countdown :endTime="countDown[product.id]" :productId="product.id" @expired="handleExpired" />
-                </div>
-                <Button :disabled="addCart[product.id]" class="CartBtn my-1 w-full justify-center shadow"
-                    @click="handleAddToCart(product)" aria-label="button add to cart">
-                    <span class="IconContainer">
-                        <IconsCart class="text-black" />
-                    </span>
-                    <span class="text-sm text-black text-nowrap">
-                        <div class="" v-if="!addCart[product.id]">
-                            Add to cart
-                        </div>
-                        <div class="flex items-center gap-2" v-if="addCart[product.id]">
-                            <IconsCart class="text-black" />In cart
-                        </div>
-                    </span>
-                </Button>
-                <Button class="BuyBtn my-1 w-full justify-center shadow" @click="handleBuyNow(product)">
-                    <span class="IconContainer" aria-label="button buy now">
-                        <IconsSend class="text-white" />
-                    </span>
-                    <span class="text-sm text-white text-nowrap">
-                        Buy now
-                    </span>
-                </Button>
+            <div class="lg:hidden block w-full mt-2" v-if="countDown[product.id]">
+                <Countdown class="text-center" :endTime="countDown[product.id]" :productId="product.id"
+                    @expired="handleExpired" />
             </div>
         </div>
     </div>
@@ -262,19 +279,19 @@ export default {
             return $createSlug(string);
         },
         async handlePromotion() {
-                try {
-                    const promotionResponse = await $fetch('/api/promotion', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    if (promotionResponse.data) {
-                        this.promotion = promotionResponse.data.data;
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            try {
+                const promotionResponse = await $fetch('/api/promotion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (promotionResponse.data) {
+                    this.promotion = promotionResponse.data.data;
                 }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         },
         promotionStyle(product) {
             if (!this.promotion) return {};
@@ -292,63 +309,63 @@ export default {
             };
         },
         async handleCheckCart() {
-                try {
-                    const cartResponse = await $fetch('/api/cart', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    if (cartResponse.data) {
-                        const cart = JSON.parse(cartResponse.data);
-                        cart.forEach(item => {
-                            this.addCart[item.id] = true;
-                        });
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            try {
+                const cartResponse = await $fetch('/api/cart', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (cartResponse.data) {
+                    const cart = JSON.parse(cartResponse.data);
+                    cart.forEach(item => {
+                        this.addCart[item.id] = true;
+                    });
                 }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         },
         async handleAddToCart(product) {
-                try {
-                    const productResponse = await $fetch('/api/cart', {
-                        method: 'POST',
-                        body: {
-                            id: product.id
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    if (productResponse) {
-                        this.addCart[product.id] = true;
-                        const cartCookie = useCookie('cart');
-                        this.$store.dispatch('addToCart', cartCookie.value.length);
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            try {
+                const productResponse = await $fetch('/api/cart', {
+                    method: 'POST',
+                    body: {
+                        id: product.id
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (productResponse) {
+                    this.addCart[product.id] = true;
+                    const cartCookie = useCookie('cart');
+                    this.$store.dispatch('addToCart', cartCookie.value.length);
                 }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         },
         async handleBuyNow(product) {
-                try {
-                    const productResponse = await $fetch('/api/cart', {
-                        method: 'POST',
-                        body: {
-                            id: product.id
-                        },
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    if (productResponse) {
-                        this.addCart[product.id] = true;
-                        const cartCookie = useCookie('cart');
-                        this.$store.dispatch('addToCart', cartCookie.value.length);
-                        this.$router.push('/cart');
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            try {
+                const productResponse = await $fetch('/api/cart', {
+                    method: 'POST',
+                    body: {
+                        id: product.id
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (productResponse) {
+                    this.addCart[product.id] = true;
+                    const cartCookie = useCookie('cart');
+                    this.$store.dispatch('addToCart', cartCookie.value.length);
+                    this.$router.push('/cart');
                 }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         },
         handleExpired(productId) {
             const promotion = this.products.data.data.find(p => p.id === productId);
