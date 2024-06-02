@@ -110,7 +110,7 @@
                     <div class="text-xs text-sub text-center flex flex-col">
                         Click on each title to download each one (Note: On phones only <span class="font-medium text-main">Chrome, Safari, Edge, Firefox and Opera</span> can download audiobooks)
                         <Button :disabled="isPendingDownload" @click="!isPendingDownload && downloadAllFiles()"
-                            class="button_hero my-1">
+                            class="button_hero my-1 hidden lg:block">
                             Click to download them all
                             <i class="pi pi-cloud-download text-sm"></i>
                         </Button>

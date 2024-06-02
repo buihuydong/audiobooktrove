@@ -5,7 +5,7 @@ export const signInWithOAuthGoogle = async (supabase: any) => {
             options: {
                 queryParams: {
                     access_type: 'offline',
-                    prompt: 'consent',
+                    prompt: 'none',
                 },
             },
         })
