@@ -108,7 +108,7 @@
                         <span class="text-base  font-semibold">Download</span>
                     </div>
                     <div class="text-xs text-sub text-center flex flex-col">
-                        Click on each title to download each one (Note: On phones only chrome and safari can download audiobooks)
+                        Click on each title to download each one (Note: On phones only <span class="font-medium text-main">Chrome, Safari, Edge, Firefox and Opera</span> can download audiobooks)
                         <Button :disabled="isPendingDownload" @click="!isPendingDownload && downloadAllFiles()"
                             class="button_hero my-1">
                             Click to download them all
