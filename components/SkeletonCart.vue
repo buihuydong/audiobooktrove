@@ -25,7 +25,7 @@
                         </div>
                         <div class="text-sm text-left font-normal my-2">
                             <span class="text-sub flex items-center gap-2">
-                                <Skeleton width="12%" height="17px" />
+                                <Skeleton width="70px" height="17px" />
                             </span>
                         </div>
                     </div>

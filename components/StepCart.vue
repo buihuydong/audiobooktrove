@@ -12,38 +12,45 @@
                                 :checked="selectedProducts.length === productCart.length && selectedProducts.length != 0" />
                         </div>
                         <div class="flex flex-col gap-3">
-                            <div v-for="product in productCart" :key="product.id" class="flex gap-3">
+                            <div v-for="product in productCart" :key="product.id" class="flex flex-wrap lg:flex-nowrap gap-3">
                                 <div class="flex gap-3">
-                                    <a-checkbox type="checkbox" :value="product.id"
-                                        @change="toggleSelectProduct(product.id)"
-                                        :checked="selectedProducts.includes(product.id)" />
-                                    <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)"
-                                        class="rounded-md w-40 h-40 overflow-hidden shadow card_box"
-                                        :style="promotionStyle(product)">
-                                        <img :src="product.image" class="w-full object-cover" :alt="product.name" />
-                                    </NuxtLink>
+                                    <div class="flex gap-3">
+                                        <a-checkbox type="checkbox" :value="product.id"
+                                            @change="toggleSelectProduct(product.id)"
+                                            :checked="selectedProducts.includes(product.id)" />
+                                        <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)"
+                                            class="rounded-md w-40 h-40 overflow-hidden shadow card_box"
+                                            :style="promotionStyle(product)">
+                                            <img :src="product.image" class="w-full object-cover" :alt="product.name" />
+                                        </NuxtLink>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold">{{ product.name }}</div>
+                                        <div class="text-sm">By: {{ product.by }}</div>
+                                        <div class="text-sm">
+                                            <div
+                                                :class="{ 'line-through text-sub': discountedPrice[product.id] && !promotionExpired[product.id] }">
+                                                Regular price ${{ product.price }}</div>
+                                            <div v-if="discountedPrice[product.id]"
+                                                :class="{ 'line-through text-sub': promotionExpired[product.id] }">
+                                                Reduced
+                                                to ${{
+                                                    discountedPrice[product.id] }}</div>
+                                        </div>
+                                        <div class="w-auto lg:block hidden" v-if="countDown[product.id]">
+                                            <Countdown :endTime="countDown[product.id]" :productId="product.id"
+                                                @expired="handleExpired" />
+                                        </div>
+                                        <Button class="mt-2 rounded-md bg-sub p-1 flex gap-1 shadow items-center"
+                                            @click="handleApiCartRemove(product.id)" aria-label="button remove cart">
+                                            <i class="pi pi-trash text-sm"></i>
+                                            <span class="text-sm">Delete</span>
+                                        </Button>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="text-sm font-semibold">{{ product.name }}</div>
-                                    <div class="text-sm">By: {{ product.by }}</div>
-                                    <div class="text-sm">
-                                        <div
-                                            :class="{ 'line-through text-sub': discountedPrice[product.id] && !promotionExpired[product.id] }">
-                                            Regular price ${{ product.price }}</div>
-                                        <div v-if="discountedPrice[product.id]"
-                                            :class="{ 'line-through text-sub': promotionExpired[product.id] }">Reduced
-                                            to ${{
-                                                discountedPrice[product.id] }}</div>
-                                    </div>
-                                    <div class="w-40" v-if="countDown[product.id]">
-                                        <Countdown :endTime="countDown[product.id]" :productId="product.id"
-                                            @expired="handleExpired" />
-                                    </div>
-                                    <Button class="mt-2 rounded-md bg-sub p-1 flex gap-1 shadow items-center"
-                                        @click="handleApiCartRemove(product.id)" aria-label="button remove cart">
-                                        <i class="pi pi-trash text-sm"></i>
-                                        <span class="text-sm">Delete</span>
-                                    </Button>
+                                <div class="lg:hidden block w-full pb-2 border-b-[1px] border-black" v-if="countDown[product.id]">
+                                    <Countdown :endTime="countDown[product.id]" :productId="product.id"
+                                        @expired="handleExpired" />
                                 </div>
                             </div>
                         </div>
