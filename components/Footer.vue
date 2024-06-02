@@ -6,18 +6,24 @@
                     <div class="col-span-12 border-r-[1px] border-black lg:col-span-2">
                         <div
                             class="flex items-center justify-between gap-6 border-b-[1px] border-black py-6 lg:block md:space-y-6 lg:border-none lg:py-0">
-                            <img class="h-10 md:h-14" :src="logo" alt="logo" />
+                            <NuxtLink to="/">
+                                <img class="h-10 md:h-14" :src="logo" alt="logo" />
+                            </NuxtLink>
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-10 mt-1 lg:mt-0">
                         <div class="grid grid-cols-1 gap-1 pb-16 lg:grid-cols-3 pl-0 lg:pl-16">
                             <div>
-                                <div class="text-sm lg:text-base font-bold lg:font-medium text-black border-b-[1px] py-2 border-black">About US
+                                <div
+                                    class="text-sm lg:text-base font-bold lg:font-medium text-black border-b-[1px] py-2 border-black">
+                                    About US
                                 </div>
                                 <div class="mt-2 text-sm" v-html="aboutUs"></div>
                             </div>
                             <div>
-                                <div class="text-sm lg:text-base font-bold lg:font-medium text-black border-b-[1px] py-2 border-black">Category
+                                <div
+                                    class="text-sm lg:text-base font-bold lg:font-medium text-black border-b-[1px] py-2 border-black">
+                                    Category
                                 </div>
                                 <NuxtLink class="hover:text-orange-500 duration-200"
                                     :to="'/audiobooks?category=' + handleSlug(category.name)"
@@ -28,7 +34,9 @@
                                 </NuxtLink>
                             </div>
                             <div>
-                                <div class="text-sm lg:text-base font-bold lg:font-medium text-black border-b-[1px] py-2 border-black">Contact
+                                <div
+                                    class="text-sm lg:text-base font-bold lg:font-medium text-black border-b-[1px] py-2 border-black">
+                                    Contact
                                 </div>
                                 <div v-if="contact.email" class="flex items-center gap-2 mt-2">
                                     <IconsMail />
