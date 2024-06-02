@@ -1,5 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { randomBytes } from 'crypto';
 export default defineNuxtConfig({
   devtools: { enabled: false },
   app: {
@@ -74,6 +73,15 @@ export default defineNuxtConfig({
   ],
   security: {
     csrf: false,
+    rateLimiter: {
+      tokensPerInterval: 150,
+      interval: 300000,
+      headers: false,
+      driver: {
+        name: 'lruCache'
+      },
+      throwError: true
+    },
     headers: {
       contentSecurityPolicy: false,
       crossOriginEmbedderPolicy: false,
