@@ -24,10 +24,6 @@ export default defineNuxtConfig({
     description: 'Register as a member and buy books with a 5% discount at Audiobook Trove. Discover thousands of high-quality audiobooks, from novels and self-help books to educational materials. Enjoy audiobooks anytime, anywhere.',
     defaultLocale: 'en',
   },
-  env: {
-    supabaseUrl: process.env.SUPABASE_URL,
-    supabaseKey: process.env.SUPABASE_KEY,
-  },
   css: [
     './assets/scss/main.scss',
     'primevue/resources/themes/aura-light-amber/theme.css',
