@@ -107,10 +107,14 @@
                     <div v-if="!isPendingDownload" class="flex gap-1 items-center justify-center">
                         <span class="text-base  font-semibold">Download</span>
                     </div>
-                    <div class="text-xs text-sub text-center flex flex-col">
-                        Click on each title to download each one (Note: On phones only <span class="font-medium text-main">Chrome, Safari, Edge, Firefox and Opera</span> can download audiobooks)
+                    <div class="text-xs text-sub text-center">
+                        Click on each title to download each one (Note: On phones only <span
+                            class="font-medium text-main">Chrome, Safari,
+                            Edge, Firefox and Opera</span> can download audiobooks)
+                    </div>
+                    <div class="hidden lg:block">
                         <Button :disabled="isPendingDownload" @click="!isPendingDownload && downloadAllFiles()"
-                            class="button_hero my-1 hidden lg:block">
+                            class="button_hero my-1 ">
                             Click to download them all
                             <i class="pi pi-cloud-download text-sm"></i>
                         </Button>

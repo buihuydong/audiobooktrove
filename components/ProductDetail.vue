@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-wrap gap-3 bg-white rounded-md shadow my-3">
+    <div class="flex flex-wrap gap-0 bg-white rounded-md shadow my-3">
         <div class="rounded-md overflow-hidden p-3 basis-full bg-white flex gap-3">
             <div class="flex gap-3 basis-full md:basis-7/12 lg:basis-9/12 items-start">
                 <div class="flex flex-col justify-center gap-2 relative">
@@ -93,6 +93,30 @@
                     </span>
                 </Button>
             </div>
+        </div>
+        <div class="lg:hidden block p-2 w-full" v-if="countDown[product.id]">
+            <Countdown class="text-center" :endTime="countDown[product.id]" :productId="product.id" @expired="handleExpired" />
+        </div>
+    </div>
+    <div class="fixed bottom-0 bg-main border-t-[1px] py-2 shadow w-full z-[1000] lg:hidden block">
+        <div class="flex gap-3 justify-end">
+            <Button :disabled="addCart[product.id]" class="CartBtn my-1 w-1/3 justify-center shadow"
+                @click="handleAddToCart(product)" aria-label="button add to cart">
+                <span class="text-sm text-black text-nowrap">
+                    <div class="" v-if="!addCart[product.id]">
+                        Add to cart
+                    </div>
+                    <div class="flex items-center gap-2" v-if="addCart[product.id]">
+                        <IconsCart class="text-black" />In cart
+                    </div>
+                </span>
+            </Button>
+            <Button class="BuyBtn my-1 mr-5  w-1/3 justify-center" @click="handleBuyNow(product)"
+                aria-label="button buy now">
+                <span class="text-sm text-white text-nowrap">
+                    Buy now
+                </span>
+            </Button>
         </div>
     </div>
 </template>
