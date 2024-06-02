@@ -114,7 +114,7 @@
                     </div>
                     <div class="hidden lg:block">
                         <Button :disabled="isPendingDownload" @click="!isPendingDownload && downloadAllFiles()"
-                            class="button_hero my-1 ">
+                            class="button_hero my-1 w-full">
                             Click to download them all
                             <i class="pi pi-cloud-download text-sm"></i>
                         </Button>
