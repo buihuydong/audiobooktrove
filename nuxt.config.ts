@@ -28,23 +28,6 @@ export default defineNuxtConfig({
     supabaseUrl: process.env.SUPABASE_URL,
     supabaseKey: process.env.SUPABASE_KEY,
   },
-  runtimeConfig: {
-    api: process.env.API || '',
-    supabaseUrl: process.env.SUPABASE_URL || '',
-    supabaseKey: process.env.SUPABASE_KEY || '',
-    turnstileSecretKey: process.env.TURNSTILE_SECRET_KEY || '',
-    turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '',
-    bucket: process.env.B2_BUCKET || '',
-    endpoint: process.env.B2_ENDPOINT || '',
-    region: process.env.B2_REGION || '',
-    accessKeyId: process.env.B2_KEY_ID || '',
-    secretAccessKey: process.env.B2_SECRET_KEY || '',
-    StripeSecretKeySk: process.env.STRIPE_SECRET_KEY_SK || '',
-    StripeSecretKeyPk: process.env.STRIPE_SECRET_KEY_PK || '',
-    turnstile: {
-      secretKey: process.env.TURNSTILE_SECRET_KEY,
-    }
-  },
   css: [
     './assets/scss/main.scss',
     'primevue/resources/themes/aura-light-amber/theme.css',

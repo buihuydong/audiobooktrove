@@ -2,17 +2,16 @@ import { S3Client, ListObjectsV2Command, GetObjectCommand } from '@aws-sdk/clien
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 export default defineEventHandler(async (event) => {
-    const runtimeConfig = useRuntimeConfig();
     const body = await readBody(event);
     const s3 = new S3Client({
-        endpoint: runtimeConfig.endpoint,
-        region: runtimeConfig.region,
+        endpoint: process.env.B2_ENDPOINT || '',
+        region: process.env.B2_REGION || '',
         credentials: {
-            accessKeyId: runtimeConfig.accessKeyId,
-            secretAccessKey: runtimeConfig.secretAccessKey
+            accessKeyId: process.env.B2_KEY_ID || '',
+            secretAccessKey: process.env.B2_SECRET_KEY || ''
         }
     });
-
+    
     const listObjectsInFolder = async (bucket, prefix) => {
         const params = {
             Bucket: bucket,

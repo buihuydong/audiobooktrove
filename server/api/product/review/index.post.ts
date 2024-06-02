@@ -1,6 +1,5 @@
 export default defineEventHandler(async (event) => {
-    const runtimeConfig = useRuntimeConfig();
-    const api = runtimeConfig.api;
+    const api = process.env.API;
     const body = await readBody(event);
 
     const requiredFields = ['overall', 'performance', 'story', 'description', 'idUser', 'idProduct'];

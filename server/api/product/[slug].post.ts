@@ -1,6 +1,5 @@
 export default defineEventHandler(async (event) => {
-    const runtimeConfig = useRuntimeConfig();
-    const api = runtimeConfig.api;
+    const api = process.env.API;
     const slug = getRouterParam(event, 'slug');
     let url = `${api}/product/${slug}`;
     

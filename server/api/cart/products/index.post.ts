@@ -1,7 +1,6 @@
 export default defineEventHandler(async (event) => {
-    const runtimeConfig = useRuntimeConfig();
     const body = await readBody(event);
-    const api = runtimeConfig.api;
+    const api = process.env.API;
     const params = new URLSearchParams();
     const url = `${api}/carts`;
     let ids = body.ids || null;

@@ -96,7 +96,7 @@
         </div>
         <div class="lg:hidden block p-2 w-full" v-if="countDown[product.id]">
             <div
-                class="text-xs text-center text-nowrap my-2 font-medium px-1 py-2 bg-white border-4 border-dashed border-orange-500 rounded-full text-black shadow-md">
+                class="text-xs text-center text-nowrap my-2 font-medium px-1 py-2 bg-white border-[1px] border-orange-500 rounded-full text-black shadow-md">
                 <div :class="{ 'line-through text-sub': discountedPrice[product.id] && !promotionExpired }">
                     Regular price ${{ product.price }}</div>
                 <div v-if="discountedPrice[product.id]" :class="{ 'line-through text-sub': promotionExpired }">
