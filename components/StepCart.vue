@@ -213,10 +213,12 @@ export default {
         },
         async handleApiCart() {
             try {
+                const user = useSupabaseUser();
                 const cartResponse = await $fetch('/api/cart/products', {
                     method: 'POST',
                     body: {
                         ids: this.products,
+                        profile_id: user.value.id
                     },
                     headers: {
                         'Content-Type': 'application/json',
@@ -296,8 +298,8 @@ export default {
             const response = await $fetch('/api/payment/adHoc', {
                 method: "POST",
                 body: {
-                    'ids': this.selectedProducts,
-                    'email': user.value.email
+                    ids: this.selectedProducts,
+                    email: user.value.email
                 },
                 headers: {
                     'Content-Type': 'application/json',

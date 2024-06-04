@@ -1,8 +1,7 @@
 <template>
     <div class="flex flex-wrap gap-3">
         <div v-if="products.data" v-for="product in products.data.data" :key="product.id"
-            class="rounded-md overflow-hidden p-2 basis-full bg-white shadow "
-            :style="promotionStyle(product)">
+            class="rounded-md overflow-hidden p-2 basis-full bg-white shadow " :style="promotionStyle(product)">
             <div class="flex gap-3">
                 <div class="flex gap-3 basis-full lg:basis-8/12 items-start">
                     <div class="flex flex-col justify-center gap-2 relative">
@@ -122,26 +121,41 @@
                     <div class="" v-if="countDown[product.id]">
                         <Countdown :endTime="countDown[product.id]" :productId="product.id" @expired="handleExpired" />
                     </div>
-                    <Button :disabled="addCart[product.id]" class="CartBtn my-1 w-full justify-center shadow"
-                        @click="handleAddToCart(product)" aria-label="button add to cart">
+                    <Button :disabled="addCart[product.id] || checkCart[product.id] || inProfile[product.id]"
+                        class="CartBtn my-1 w-full justify-center shadow" @click="handleAddToCart(product)"
+                        aria-label="button add to cart">
                         <span class="IconContainer">
                             <IconsCart class="text-black" />
                         </span>
                         <span class="text-sm text-black text-nowrap">
-                            <div class="" v-if="!addCart[product.id]">
+                            <div class="flex items-center gap-1" v-if="!addCart[product.id] && !inProfile[product.id]">
                                 Add to cart
+                                <div class="mt-0.5" v-if="checkCart[product.id]">
+                                    <IconsTadpole />
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1" v-if="inProfile[product.id]">
+                                <IconsUser class="text-black" />In profile
                             </div>
                             <div class="flex items-center gap-2" v-if="addCart[product.id]">
                                 <IconsCart class="text-black" />In cart
                             </div>
                         </span>
                     </Button>
-                    <Button class="BuyBtn my-1 w-full justify-center shadow" @click="handleBuyNow(product)">
+                    <Button :disabled="checkCartBuy[product.id] || inProfile[product.id]" class="BuyBtn my-1 w-full justify-center shadow" @click="handleBuyNow(product)">
                         <span class="IconContainer" aria-label="button buy now">
                             <IconsSend class="text-white" />
                         </span>
                         <span class="text-sm text-white text-nowrap">
-                            Buy now
+                            <div class="flex items-center gap-1" v-if="!inProfile[product.id]">
+                                Buy now
+                            <div class="mt-0.5" v-if="checkCartBuy[product.id]">
+                                <IconsTadpole />
+                            </div>
+                            </div>
+                            <div class="flex items-center gap-1" v-if="inProfile[product.id]">
+                                <IconsUser class="text-white" />In profile
+                            </div>
                         </span>
                     </Button>
                 </div>
@@ -191,6 +205,9 @@ export default {
             addCart: [],
             promotionExpired: [],
             currentAudioKey: null,
+            checkCart: [],
+            checkCartBuy: [],
+            inProfile: [],
         };
     },
     methods: {
@@ -327,44 +344,94 @@ export default {
             }
         },
         async handleAddToCart(product) {
-            try {
-                const productResponse = await $fetch('/api/cart', {
-                    method: 'POST',
-                    body: {
-                        id: product.id
-                    },
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
-                if (productResponse) {
-                    this.addCart[product.id] = true;
-                    const cartCookie = useCookie('cart');
-                    this.$store.dispatch('addToCart', cartCookie.value.length);
+            this.checkCart[product.id] = true;
+            const user = useSupabaseUser();
+            if (user.value != undefined) {
+                try {
+                    const checkResponse = await $fetch('/api/cart/transaction', {
+                        method: 'POST',
+                        body: {
+                            product_id: product.id,
+                            profile_id: user.value.id
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+
+                    if (!checkResponse.data.data) {
+                        try {
+                            const productResponse = await $fetch('/api/cart', {
+                                method: 'POST',
+                                body: {
+                                    id: product.id
+                                },
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                            })
+                            if (productResponse) {
+                                this.checkCart[product.id] = false;
+                                this.addCart[product.id] = true;
+                                const cartCookie = useCookie('cart');
+                                this.$store.dispatch('addToCart', cartCookie.value.length);
+                            }
+                        } catch (error) {
+                            console.error('Error fetching data:', error);
+                        }
+                    } else {
+                        this.checkCart[product.id] = false;
+                        this.inProfile[product.id] = true;
+                    }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
                 }
-            } catch (error) {
-                console.error('Error fetching data:', error);
             }
         },
         async handleBuyNow(product) {
-            try {
-                const productResponse = await $fetch('/api/cart', {
-                    method: 'POST',
-                    body: {
-                        id: product.id
-                    },
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
-                if (productResponse) {
-                    this.addCart[product.id] = true;
-                    const cartCookie = useCookie('cart');
-                    this.$store.dispatch('addToCart', cartCookie.value.length);
-                    this.$router.push('/cart');
+            this.checkCartBuy[product.id] = true;
+            const user = useSupabaseUser();
+            if (user.value != undefined) {
+                try {
+                    const checkResponse = await $fetch('/api/cart/transaction', {
+                        method: 'POST',
+                        body: {
+                            product_id: product.id,
+                            profile_id: user.value.id
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+
+                    if (!checkResponse.data.data) {
+                        try {
+                            const productResponse = await $fetch('/api/cart', {
+                                method: 'POST',
+                                body: {
+                                    id: product.id
+                                },
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                            })
+                            if (productResponse) {
+                                this.checkCartBuy[product.id] = false;
+                                this.addCart[product.id] = true;
+                                const cartCookie = useCookie('cart');
+                                this.$store.dispatch('addToCart', cartCookie.value.length);
+                                this.$router.push('/cart');
+                            }
+                        } catch (error) {
+                            console.error('Error fetching data:', error);
+                        }
+                    } else {
+                        this.checkCartBuy[product.id] = false;
+                        this.inProfile[product.id] = true;
+                    }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
                 }
-            } catch (error) {
-                console.error('Error fetching data:', error);
             }
         },
         handleExpired(productId) {

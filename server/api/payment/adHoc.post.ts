@@ -1,5 +1,5 @@
 import { useServerStripe } from "#stripe/server";
-import { serverSupabaseServiceRole } from '#supabase/server'
+import { serverSupabaseServiceRole } from '#supabase/server';
 interface Product {
     name: string;
     price: string;

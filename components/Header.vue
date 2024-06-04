@@ -8,7 +8,7 @@
             </div>
             <nav class="hidden lg:block">
                 <ul class="md:px-2 ml-auto md:flex md:space-x-2 absolute md:relative top-full left-0 right-0">
-                    <li v-for="(item, index) in menuItems" :key="index">
+                    <li v-for="(item, index) in menuItems" :key="index" class="mx-2">
                         <NuxtLink :to="item.url" class="flex md:inline-flex py-2 items-center">
                             <Button class="button_hero--secondary" aria-label="button menu">
                                 <span class="text-sm">{{ item.title }}</span>
@@ -55,8 +55,8 @@
                                     :class="{ 'bg-black hover:bg-orange-600': isLogin, 'bg-sub': !isLogin }"
                                     aria-label="button login">
                                     <icons-user v-if="!isLogin" class="text-2xl" />
-                                    <img v-if="isLogin" class="w-full h-auto object-cover rounded-full"
-                                        :src="avatar" alt="avatar"/>
+                                    <img v-if="isLogin" class="w-full h-auto object-cover rounded-full" :src="avatar"
+                                        alt="avatar" />
                                 </Button>
                             </NuxtLink>
                         </li>
@@ -115,7 +115,7 @@ export default {
                 { title: 'Home', url: '/' },
                 { title: 'Audiobooks', url: '/audiobooks' },
             ],
-            visibleRight: false, 
+            visibleRight: false,
             logo: logo,
             avatar: avatar
         };

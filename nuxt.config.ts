@@ -21,8 +21,10 @@ export default defineNuxtConfig({
   site: {
     url: 'https://audiobooktrove.com',
     name: 'Audiobooktrove',
-    description: 'Register as a member and buy books with a 5% discount at Audiobook Trove. Discover thousands of high-quality audiobooks, from novels and self-help books to educational materials. Enjoy audiobooks anytime, anywhere.',
+    title: 'Join Audiobooktrove: Enjoy a 5% Discount on Thousands of Audiobooks',
+    description: 'Register as a member at Audiobooktrove and get a 5% discount on your audiobook purchases. Discover and enjoy thousands of high-quality audiobooks, including novels, self-help guides, and educational materials. Listen to your favorite audiobooks anytime, anywhere. Sign up today and start saving!',
     defaultLocale: 'en',
+    trailingSlash: true,
   },
   css: [
     './assets/scss/main.scss',

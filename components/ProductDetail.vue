@@ -69,27 +69,42 @@
                 <div class="" v-if="countDown[product.id]">
                     <Countdown :endTime="countDown[product.id]" :productId="product.id" @expired="handleExpired" />
                 </div>
-                <Button :disabled="addCart[product.id]" class="CartBtn my-1 w-full justify-center shadow"
-                    @click="handleAddToCart(product)" aria-label="button add to cart">
+                <Button :disabled="addCart[product.id] || checkCart[product.id] || inProfile[product.id]"
+                    class="CartBtn my-1 w-full justify-center shadow" @click="handleAddToCart(product)"
+                    aria-label="button add to cart">
                     <span class="IconContainer">
                         <IconsCart class="text-black" />
                     </span>
                     <span class="text-sm text-black text-nowrap">
-                        <div class="" v-if="!addCart[product.id]">
+                        <div class="flex items-center gap-1" v-if="!addCart[product.id] && !inProfile[product.id]">
                             Add to cart
+                            <div class="mt-0.5" v-if="checkCart[product.id]">
+                                <IconsTadpole />
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1" v-if="inProfile[product.id]">
+                            <IconsUser class="text-black" />In profile
                         </div>
                         <div class="flex items-center gap-2" v-if="addCart[product.id]">
                             <IconsCart class="text-black" />In cart
                         </div>
                     </span>
                 </Button>
-                <Button class="BuyBtn my-1 w-full justify-center" @click="handleBuyNow(product)"
-                    aria-label="button buy now">
-                    <span class="IconContainer">
+                <Button :disabled="checkCartBuy[product.id] || inProfile[product.id]"
+                    class="BuyBtn my-1 w-full justify-center shadow" @click="handleBuyNow(product)">
+                    <span class="IconContainer" aria-label="button buy now">
                         <IconsSend class="text-white" />
                     </span>
                     <span class="text-sm text-white text-nowrap">
-                        Buy now
+                        <div class="flex items-center gap-1" v-if="!inProfile[product.id]">
+                            Buy now
+                            <div class="mt-0.5" v-if="checkCartBuy[product.id]">
+                                <IconsTadpole />
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1" v-if="inProfile[product.id]">
+                            <IconsUser class="text-white" />In profile
+                        </div>
                     </span>
                 </Button>
             </div>
@@ -111,21 +126,37 @@
     </div>
     <div class="fixed bottom-0 bg-main border-t-[1px] py-2 shadow w-full z-[1000] lg:hidden block">
         <div class="flex gap-3 justify-end">
-            <Button :disabled="addCart[product.id]" class="CartBtn my-1 w-1/3 justify-center shadow"
-                @click="handleAddToCart(product)" aria-label="button add to cart">
+            <Button :disabled="addCart[product.id] || checkCart[product.id] || inProfile[product.id]"
+                class="CartBtn my-1 w-1/3 justify-center shadow" @click="handleAddToCart(product)"
+                aria-label="button add to cart">
                 <span class="text-sm text-black text-nowrap">
-                    <div class="" v-if="!addCart[product.id]">
+                    <div class="flex items-center gap-1" v-if="!addCart[product.id] && !inProfile[product.id]">
                         Add to cart
+                        <div class="mt-0.5" v-if="checkCart[product.id]">
+                            <IconsTadpole />
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1" v-if="inProfile[product.id]">
+                        <IconsUser class="text-black" />In profile
                     </div>
                     <div class="flex items-center gap-2" v-if="addCart[product.id]">
                         <IconsCart class="text-black" />In cart
                     </div>
                 </span>
             </Button>
-            <Button class="BuyBtn my-1 mr-5  w-1/3 justify-center" @click="handleBuyNow(product)"
+            <Button :disabled="checkCartBuy[product.id] || inProfile[product.id]"
+                class="BuyBtn my-1 mr-5  w-1/3 justify-center" @click="handleBuyNow(product)"
                 aria-label="button buy now">
-                <span class="text-sm text-white text-nowrap">
-                    Buy now
+                <span class="text-sm text-black text-nowrap">
+                    <div class="flex items-center gap-1" v-if="!inProfile[product.id]">
+                        Buy now
+                        <div class="mt-0.5" v-if="checkCartBuy[product.id]">
+                            <IconsTadpole />
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1" v-if="inProfile[product.id]">
+                        <IconsUser />In profile
+                    </div>
                 </span>
             </Button>
         </div>
@@ -156,6 +187,9 @@ export default {
             addCart: [],
             promotionExpired: false,
             currentAudioKey: null,
+            checkCart: [],
+            checkCartBuy: [],
+            inProfile: [],
         }
     },
     mounted() {
@@ -286,44 +320,94 @@ export default {
             }
         },
         async handleAddToCart(product) {
-            try {
-                const productResponse = await $fetch('/api/cart', {
-                    method: 'POST',
-                    body: {
-                        id: product.id
-                    },
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
-                if (productResponse) {
-                    this.addCart[product.id] = true;
-                    const cartCookie = useCookie('cart');
-                    this.$store.dispatch('addToCart', cartCookie.value.length);
+            this.checkCart[product.id] = true;
+            const user = useSupabaseUser();
+            if (user.value != undefined) {
+                try {
+                    const checkResponse = await $fetch('/api/cart/transaction', {
+                        method: 'POST',
+                        body: {
+                            product_id: product.id,
+                            profile_id: user.value.id
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+
+                    if (!checkResponse.data.data) {
+                        try {
+                            const productResponse = await $fetch('/api/cart', {
+                                method: 'POST',
+                                body: {
+                                    id: product.id
+                                },
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                            })
+                            if (productResponse) {
+                                this.checkCart[product.id] = false;
+                                this.addCart[product.id] = true;
+                                const cartCookie = useCookie('cart');
+                                this.$store.dispatch('addToCart', cartCookie.value.length);
+                            }
+                        } catch (error) {
+                            console.error('Error fetching data:', error);
+                        }
+                    } else {
+                        this.checkCart[product.id] = false;
+                        this.inProfile[product.id] = true;
+                    }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
                 }
-            } catch (error) {
-                console.error('Error fetching data:', error);
             }
         },
         async handleBuyNow(product) {
-            try {
-                const productResponse = await $fetch('/api/cart', {
-                    method: 'POST',
-                    body: {
-                        id: product.id
-                    },
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
-                if (productResponse) {
-                    this.addCart[product.id] = true;
-                    const cartCookie = useCookie('cart');
-                    this.$store.dispatch('addToCart', cartCookie.value.length);
-                    this.$router.push('/cart');
+            this.checkCartBuy[product.id] = true;
+            const user = useSupabaseUser();
+            if (user.value != undefined) {
+                try {
+                    const checkResponse = await $fetch('/api/cart/transaction', {
+                        method: 'POST',
+                        body: {
+                            product_id: product.id,
+                            profile_id: user.value.id
+                        },
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+
+                    if (!checkResponse.data.data) {
+                        try {
+                            const productResponse = await $fetch('/api/cart', {
+                                method: 'POST',
+                                body: {
+                                    id: product.id
+                                },
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                            })
+                            if (productResponse) {
+                                this.checkCartBuy[product.id] = false;
+                                this.addCart[product.id] = true;
+                                const cartCookie = useCookie('cart');
+                                this.$store.dispatch('addToCart', cartCookie.value.length);
+                                this.$router.push('/cart');
+                            }
+                        } catch (error) {
+                            console.error('Error fetching data:', error);
+                        }
+                    } else {
+                        this.checkCartBuy[product.id] = false;
+                        this.inProfile[product.id] = true;
+                    }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
                 }
-            } catch (error) {
-                console.error('Error fetching data:', error);
             }
         },
         handleExpired(productId) {

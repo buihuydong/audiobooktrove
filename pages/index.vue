@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div v-if="isData">
+    <div>
       <Hero :hero="hero" />
-      <div v-for="(category, index) in categories" :key="index">
+      <div v-if="isData" v-for="(category, index) in categories" :key="index">
         <SlideShowProduct v-if="products[category.id]" :slidesPerView="slidesPerView" :breakpoints="breakpoints"
           :products="products[category.id]" :category="category.name" />
         <div v-else class="basis-full lg:basis-9/12">
@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div v-else class="flex justify-center">
+    <div v-if="!isData" class="flex justify-center">
       <ProgressSpinnerAudio class="my-5" />
     </div>
   </div>
@@ -68,31 +68,33 @@ export default {
     },
     async handleApi() {
       try {
-        const [heroResponse, productResponse] = await Promise.all([
-          $fetch('/api/hero', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          }),
-          $fetch('/api/product/home', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-        ]);
+        const heroResponse = await $fetch('/api/hero', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
 
         if (heroResponse.data) {
           this.hero = heroResponse.data.data;
         }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+
+      try {
+        const productResponse = await $fetch('/api/product/home', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
 
         if (productResponse.data) {
           this.categories = productResponse.data.data.category;
           this.products = productResponse.data.data.product;
+          this.isData = true;
         }
-
-        this.isData = true;
 
       } catch (error) {
         console.error('Error fetching data:', error);
