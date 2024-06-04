@@ -220,7 +220,6 @@ export default {
             this.currentAudioKey = audioKey;
         },
         startAudio(audioKey) {
-            console.log(audioKey);
             this.isLoad[audioKey] = false;
             if (this.sound[audioKey].playing()) {
                 this.isActive[audioKey] = false;

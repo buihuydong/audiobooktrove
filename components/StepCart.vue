@@ -151,7 +151,6 @@ export default {
         },
         toggleSelectProduct(productId) {
             const index = this.selectedProducts.indexOf(productId);
-
             if (index === -1) {
                 this.selectedProducts.push(productId);
             } else {
@@ -169,7 +168,6 @@ export default {
                 this.productCart = this.productCart.filter(product => remainingItemIds.includes(product.id));
                 this.selectedProducts = this.selectedProducts.filter(id => remainingItemIds.includes(id));
                 this.countCart = this.productCart.length;
-
                 try {
                     const cartResponse = await $fetch('/api/cart/all', {
                         method: 'DELETE',
@@ -180,7 +178,6 @@ export default {
                             'Content-Type': 'application/json',
                         },
                     })
-
                     if (cartResponse.statusCode == 200) {
                         this.updateTotalPrice();
                         this.handleRemoveCart();
@@ -272,11 +269,9 @@ export default {
             if (!promotionUse) return {};
             const promotion = this.promotion.promotion.find(item => item.id === promotionUse.id);
             if (!promotion) return {};
-
             const discount = promotion.discount;
             this.countDown[product.id] = promotion.end;
             this.discountedPrice[product.id] = parseFloat((product.price * (1 - discount / 100)).toFixed(2));
-
             return {
                 '--promotion-content': `'Sale ${discount}%'`,
             };
@@ -301,7 +296,6 @@ export default {
                     'Content-Type': 'application/json',
                 },
             });
-
             if (response) {
                 window.location.href = response.url;
             } else {

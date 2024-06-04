@@ -78,11 +78,13 @@ export default defineEventHandler(async (event) => {
             quantity: 1,
         }))
 
+        const ids = products.map(product => product.id).join(',');
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             line_items: products,
             mode: 'payment',
-            success_url: 'https://audiobooktrove.com/profile',
+            success_url: `https://audiobooktrove.com/profile?ids=${ids}`,
             cancel_url: 'https://audiobooktrove.com/cart',
         });
         

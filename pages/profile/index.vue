@@ -77,13 +77,13 @@
                                 </div>
                             </div>
                         </div>
-                        <Paginator class="mt-3 shadow rounded-md overflow-hidden" :rows="10" :totalRecords="totalRecords"
-                            v-model:first="page" />
+                        <Paginator class="mt-3 shadow rounded-md overflow-hidden" :rows="10"
+                            :totalRecords="totalRecords" v-model:first="page" />
                     </div>
                     <div v-if="!isData" class="flex flex-col justify-center">
                         <SkeletonTransaction />
-                        <Paginator class="mt-3 shadow rounded-md overflow-hidden" :rows="10" :totalRecords="totalRecords"
-                            v-model:first="page" />
+                        <Paginator class="mt-3 shadow rounded-md overflow-hidden" :rows="10"
+                            :totalRecords="totalRecords" v-model:first="page" />
                     </div>
                     <div v-if="isEmpty" class="flex flex-col items-center justify-center bg-white shadow rounded-md">
                         <div class="flex flex-col items-center justify-center pb-2">
@@ -245,6 +245,9 @@ export default {
         this.handleApiProfile();
         this.handleTransaction();
         this.handleCountTransaction();
+        if (this.$route.query.ids) {
+            this.handlePayCheckCart(this.$route.query.ids);
+        }
     },
     watch: {
         page(newValue, oldValue) {
@@ -475,6 +478,27 @@ export default {
             const { $createSlug } = useNuxtApp();
             return $createSlug(string);
         },
+        async handlePayCheckCart(ids) {
+            const idArray = ids.split(',').map(idString => parseInt(idString));
+            try {
+                const cartResponse = await $fetch('/api/cart/all', {
+                    method: 'DELETE',
+                    body: {
+                        ids: idArray,
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (cartResponse.statusCode == 200) {
+                    const cartCookie = useCookie('cart');
+                    const number = cartCookie.value.length;
+                    this.$store.dispatch('addToCart', number);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
     }
 }
 </script>
