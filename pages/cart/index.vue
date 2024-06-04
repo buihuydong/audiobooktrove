@@ -30,22 +30,22 @@ export default {
     },
     methods: {
         async handleApi() {
-                try {
-                    const cartResponse = await $fetch(`/api/cart`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
-                    if (cartResponse.data) {
-                        this.carts = JSON.parse(cartResponse.data);
-                        this.isData = true;
-                    } else {
-                        this.isData = true;
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+            try {
+                const cartResponse = await $fetch(`/api/cart`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                if (cartResponse.data) {
+                    this.carts = JSON.parse(cartResponse.data);
+                    this.isData = true;
+                } else {
+                    this.isData = true;
                 }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         }
     }
 }

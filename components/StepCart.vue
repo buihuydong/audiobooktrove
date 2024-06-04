@@ -125,8 +125,11 @@ export default {
         }
     },
     mounted() {
-        if (this.products) {
+        if (this.products.length > 0) {
             this.handleApiCart();
+        } else {
+            this.isEmpty = true;
+            this.isDataProduct = true;
         }
         this.handlePromotion();
     },
@@ -179,7 +182,6 @@ export default {
                     })
 
                     if (cartResponse.statusCode == 200) {
-                        console.log(cartResponse);
                         this.updateTotalPrice();
                         this.handleRemoveCart();
                     }
@@ -228,12 +230,6 @@ export default {
                     this.productCart = cartResponse.data.data;
                     this.countCart = this.productCart.length;
                     this.isDataProduct = true;
-
-                    if (cartResponse.data.data.length == 0) {
-                        this.isEmpty = true;
-                    } else {
-                        this.isEmpty = false;
-                    }
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
