@@ -20,9 +20,9 @@ export default defineEventHandler(async (event) => {
     const urlTimezone = `${api}/timezone`;
     const urlTransaction = `${api}/storeTransaction`;
     let ids = body.ids || null;
-
+    let idsString = null
     if (ids && Array.isArray(ids)) {
-        const idsString = ids.join(',');
+        idsString = ids.join(',');
         params.append('ids', idsString);
     }
 
@@ -78,16 +78,14 @@ export default defineEventHandler(async (event) => {
             quantity: 1,
         }))
 
-        const ids = products.map(product => product.id).join(',');
-
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             line_items: products,
             mode: 'payment',
-            success_url: `https://audiobooktrove.com/profile?ids=${ids}`,
+            success_url: `https://audiobooktrove.com/profile?ids=${idsString}`,
             cancel_url: 'https://audiobooktrove.com/cart',
         });
-        
+
         if (session) {
             const resTransaction = await $fetch(urlTransaction, {
                 method: "POST",
@@ -100,7 +98,7 @@ export default defineEventHandler(async (event) => {
                     'Content-Type': 'application/json'
                 },
             });
-            
+
             if (resTransaction.success) {
                 return session;
             } else {
