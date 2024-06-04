@@ -77,12 +77,12 @@
                                 </div>
                             </div>
                         </div>
-                        <Paginator class="mt-3 shadow rounded-md overflow-hidden" :rows="1" :totalRecords="totalRecords"
+                        <Paginator class="mt-3 shadow rounded-md overflow-hidden" :rows="10" :totalRecords="totalRecords"
                             v-model:first="page" />
                     </div>
                     <div v-if="!isData" class="flex flex-col justify-center">
                         <SkeletonTransaction />
-                        <Paginator class="mt-3 shadow rounded-md overflow-hidden" :rows="1" :totalRecords="totalRecords"
+                        <Paginator class="mt-3 shadow rounded-md overflow-hidden" :rows="10" :totalRecords="totalRecords"
                             v-model:first="page" />
                     </div>
                     <div v-if="isEmpty" class="flex flex-col items-center justify-center bg-white shadow rounded-md">
@@ -192,6 +192,9 @@
                     </div>
                 </Dialog>
             </div>
+        </div>
+        <div v-if="!load" class="flex justify-center">
+            <ProgressSpinnerAudio class="my-5" />
         </div>
     </div>
 </template>

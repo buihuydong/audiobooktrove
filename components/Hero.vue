@@ -6,8 +6,8 @@
           <div class="text-white text-left font-medium text-xl w-3/3 lg:w-2/3">
             {{ hero.sub_title ?? '' }}
           </div>
-          <div class="text-white text-left font-bold text-2xl lg:text-4xl w-3/3 lg:w-2/3" v-html="hero.title">
-          </div>
+          <div class="text-white text-left font-bold text-2xl lg:text-4xl w-3/3 lg:w-2/3" v-html="hero.title" v-if="hero.title"></div>
+          <div class="text-white text-left font-bold text-2xl lg:text-4xl w-3/3 lg:w-2/3" v-if="!hero.title"><span class="flex items-center gap-2">Loading <IconsTadpole class="mt-2" /></span></div>
           <div class="w-[216px]">
             <NuxtLink to="/audiobooks" class="">
               <Button class="button_hero mt-5">
