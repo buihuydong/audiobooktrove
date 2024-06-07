@@ -5,7 +5,7 @@
     </div>
     <div v-if="isData" class="p-2 rounded-md bg-white">
       <Fieldset legend="SecurityPolicy" :toggleable="true">
-        <p class="m-0 px-3" v-html="description.description"></p>
+        <p class="m-0 px-3 text-sm" v-html="description.description"></p>
       </Fieldset>
     </div>
     <div v-if="!isData" class="flex justify-center">
