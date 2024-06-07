@@ -51,7 +51,7 @@
                     </template>
                     <div class="overflow-hidden">
                         <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)"
-                            class="w-48 h-48 shadow card_box_slide" :style="promotionStyle(product)">
+                            class="shadow card_box_slide" :style="promotionStyle(product)">
                             <img :src="product.image" class="rounded-md w-full h-full object-cover"
                                 :alt="product.name" />
                         </NuxtLink>
@@ -69,7 +69,7 @@
                     </div>
                 </a-tooltip>
                 <div class="overflow-hidden rounded-md shadow">
-                    <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)" class="block lg:hidden card_box"
+                    <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)" class="shadow block lg:hidden card_box"
                         :style="promotionStyle(product)">
                         <img :src="product.image" class="w-full h-full object-cover" :alt="product.name" />
                     </NuxtLink>
@@ -86,6 +86,13 @@
                     </div>
                 </div>
             </swiper-slide>
+            <div class="flex justify-center mt-5">
+                    <NuxtLink :to="'/audiobooks?category=' + handleSlug(category)" class="">
+                        <span class="text-sm hover:text-orange-500 duration-200 flex items-center gap-1">
+                            <IconsBouncing /> See more <i class="pi pi-arrow-right text-xs"></i>
+                        </span>
+                    </NuxtLink>
+                </div>
         </swiper>
         <div v-else>
             <div class="flex flex-col items-center justify-center">
@@ -126,6 +133,7 @@ export default {
     data() {
         return {
             promotion: null,
+            categoryLink: null
         }
     },
     mounted() {

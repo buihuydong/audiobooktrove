@@ -49,12 +49,12 @@
                                 </div>
                             </template>
                             <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)"
-                                class="rounded-md  w-48 h-48 overflow-hidden shadow card_box">
+                                class="rounded-md w-48 overflow-hidden shadow card_box">
                                 <img :src="product.image" class="w-full h-full object-cover" :alt="product.name" />
                             </NuxtLink>
                         </a-tooltip>
                         <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)"
-                            class="rounded-md w-40 h-40 lg:w-48 lg:h-48 overflow-hidden shadow block lg:hidden card_box">
+                            class="rounded-md w-40 lg:w-48 overflow-hidden shadow block lg:hidden card_box">
                             <img :src="product.image" class="w-full h-full object-cover" :alt="product.name" />
                         </NuxtLink>
                         <Button :disabled="isLoad[product.audio_object_key]"

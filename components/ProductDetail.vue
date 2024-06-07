@@ -3,7 +3,7 @@
         <div class="rounded-md overflow-hidden basis-full bg-white flex gap-3">
             <div class="flex gap-3 basis-full md:basis-7/12 lg:basis-9/12 items-start">
                 <div class="flex flex-col justify-center gap-2 relative">
-                    <div class="rounded-md w-40 h-40 lg:w-60 lg:h-60 shadow overflow-hidden card_box_detail"
+                    <div class="rounded-md w-40 lg:w-60 shadow overflow-hidden card_box_detail"
                         :style="promotionStyle(product)">
                         <img :src="product.image" class="w-full h-full object-cover" :alt="product.name" />
                     </div>
@@ -147,15 +147,15 @@
             <Button :disabled="checkCartBuy[product.id] || inProfile[product.id]"
                 class="BuyBtn my-1 mr-5  w-1/3 justify-center" @click="handleBuyNow(product)"
                 aria-label="button buy now">
-                <span class="text-sm text-black text-nowrap">
+                <span class="text-sm text-white text-nowrap">
                     <div class="flex items-center gap-1" v-if="!inProfile[product.id]">
                         Buy now
                         <div class="mt-0.5" v-if="checkCartBuy[product.id]">
-                            <IconsTadpole />
+                            <IconsTadpole class="text-white" />
                         </div>
                     </div>
                     <div class="flex items-center gap-1" v-if="inProfile[product.id]">
-                        <IconsUser />In profile
+                        <IconsUser class="text-white" />In profile
                     </div>
                 </span>
             </Button>
