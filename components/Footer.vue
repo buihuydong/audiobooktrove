@@ -72,6 +72,9 @@
                             <div class="flex flex-wrap gap-3">
                                 <NuxtLink to="/PayPolicy" class="text-sm hover:text-orange-500 duration-200 basis-full"><span class="flex items-center gap-1"><IconsShield /> Pay policy</span></NuxtLink>
                                 <NuxtLink to="/SecurityPolicy" class="text-sm hover:text-orange-500 duration-200 basis-full"><span class="flex items-center gap-1"><IconsShield /> Security policy</span></NuxtLink>
+                                <div class="text-sm">
+                                    © Copyright 2024 Audiobooktrove . All Rights Reserved.
+                                </div>
                             </div>
                         </div>
                     </div>
