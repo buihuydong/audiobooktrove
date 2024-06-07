@@ -19,7 +19,7 @@
                                             @change="toggleSelectProduct(product.id)"
                                             :checked="selectedProducts.includes(product.id)" />
                                         <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)"
-                                            class="rounded-md w-40 h-40 overflow-hidden shadow card_box"
+                                            class="rounded-md w-40 overflow-hidden shadow card_box"
                                             :style="promotionStyle(product)">
                                             <img :src="product.image" class="w-full object-cover" :alt="product.name" />
                                         </NuxtLink>
