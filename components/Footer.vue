@@ -12,7 +12,7 @@
                         </div>
                     </div>
                     <div class="col-span-12 lg:col-span-10 mt-1 lg:mt-0">
-                        <div class="grid grid-cols-1 gap-1 pb-16 lg:grid-cols-3 pl-0 lg:pl-16">
+                        <div class="grid grid-cols-1 gap-1 pb-5 lg:grid-cols-3 pl-0 lg:pl-16">
                             <div>
                                 <div
                                     class="text-sm lg:text-base font-bold lg:font-medium text-black border-b-[1px] py-2 border-black">
@@ -66,6 +66,12 @@
                                     <i class="pi pi-map-marker"></i>
                                     <div>{{ contact.adress }}</div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="pl-0 lg:pl-16 pt-5 border-t-[1px] border-black">
+                            <div class="flex flex-wrap gap-3">
+                                <NuxtLink to="/PayPolicy" class="text-sm hover:text-orange-500 duration-200 basis-full"><span class="flex items-center gap-1"><IconsShield /> Pay policy</span></NuxtLink>
+                                <NuxtLink to="/SecurityPolicy" class="text-sm hover:text-orange-500 duration-200 basis-full"><span class="flex items-center gap-1"><IconsShield /> Security policy</span></NuxtLink>
                             </div>
                         </div>
                     </div>

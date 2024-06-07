@@ -66,7 +66,7 @@
                                     </Button>
                                     <Button :disabled="isPendingFile[transaction.audio_object_key_private]"
                                         class="flex gap-1 items-center mt-2 bg-sub shadow rounded-md p-1"
-                                        @click="handleDownloadFile(transaction.audio_bucket, transaction.audio_object_key_private)">
+                                        @click="handleDownloadChoice(transaction)">
                                         <i class="pi pi-download"></i>
                                         <span class="text-sm">{{ isPendingFile[transaction.audio_object_key_private] ?
                                             'Downloading' : 'Download' }}</span>
@@ -315,6 +315,14 @@ export default {
             let query = { page: page };
             this.$router.push({ path: '/profile', query });
         },
+        handleDownloadChoice(transaction) {
+            if(transaction.statusAudio == 'B2 cloud') {
+                this.handleDownloadFile(transaction.audio_bucket, transaction.audio_object_key_private);
+            } else {
+                this.urls = transaction.audio_other;
+                this.visibleDownload = true;
+            }
+        },
         async handleDownloadFile(bucket, key) {
             this.isPendingFile[key] = true;
             try {
@@ -328,7 +336,6 @@ export default {
                         'Content-Type': 'application/json',
                     },
                 });
-
                 if (s3Response) {
                     this.urls = s3Response;
                     this.isPendingFile[key] = false;
