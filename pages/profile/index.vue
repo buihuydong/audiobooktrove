@@ -44,7 +44,7 @@
                             <div class="flex gap-3 bg-white rounded-md shadow p-2" v-for="transaction in transactions"
                                 :key="transaction.id">
                                 <NuxtLink :to="'/audiobooks/' + handleSlug(transaction.name)"
-                                    class="rounded-md w-40 h-40 overflow-hidden shadow">
+                                    class="rounded-md w-40 overflow-hidden shadow">
                                     <img :src="transaction.image" class="w-full h-full object-cover"
                                         :alt="transaction.name" />
                                 </NuxtLink>
