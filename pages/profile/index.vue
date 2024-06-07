@@ -160,19 +160,19 @@
                         <span class="text-main">{{ nameBook }}</span> review
                     </div>
                     <div class="flex items-center mt-1">
-                        <div class="w-28 text-sm"><span class="text-red-500">*</span>Overall</div>
+                        <div class="w-28 text-sm"><span class="text-red-500">*</span> Overall</div>
                         <Rating v-model="overall" :cancel="false" />
                     </div>
                     <div class="flex items-center mt-1">
-                        <div class="w-28 text-sm"><span class="text-red-500">*</span>Performance</div>
+                        <div class="w-28 text-sm"><span class="text-red-500">*</span> Performance</div>
                         <Rating v-model="performance" :cancel="false" />
                     </div>
                     <div class="flex items-center mt-1">
-                        <div class="w-28 text-sm"><span class="text-red-500">*</span>Story</div>
+                        <div class="w-28 text-sm"><span class="text-red-500">*</span> Story</div>
                         <Rating v-model="story" :cancel="false" />
                     </div>
                     <div class="mt-1">
-                        <div class="w-28 text-sm"><span class="text-red-500">*</span>Description</div>
+                        <div class="w-28 text-sm"><span class="text-red-500">*</span> Description</div>
                         <Textarea v-model="description" rows="5" class="w-full border-[1px] mt-1 p-1 text-sm"
                             :placeholder="'Tell us about your experience with the book ' + nameBook" />
                     </div>
