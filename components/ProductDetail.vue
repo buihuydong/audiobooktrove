@@ -361,6 +361,8 @@ export default {
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
+            } else {
+                this.$router.push('/login');
             }
         },
         async handleBuyNow(product) {
@@ -407,6 +409,8 @@ export default {
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
+            } else {
+                this.$router.push('/login');
             }
         },
         handleExpired(productId) {
