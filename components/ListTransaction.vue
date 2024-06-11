@@ -277,7 +277,7 @@ export default {
             if (!this.promotion) return {};
             const promotionUse = this.promotion.promotionUse.find(item => product.id === item.product_id);
             if (!promotionUse) return {};
-            const promotion = this.promotion.promotion.find(item => item.id === promotionUse.id);
+            const promotion = this.promotion.promotion.find(item => item.id === promotionUse.promotion_id);
             if (!promotion) return {};
 
             const discount = promotion.discount;

@@ -265,9 +265,15 @@ export default {
         },
         promotionStyle(product) {
             if (!this.promotion) return {};
-            const promotionUse = this.promotion.promotionUse.find(item => product.id === item.product_id);
+            const promotionUse = this.promotion.promotionUse.find(item => {
+                if (Array.isArray(JSON.parse(item.product_id))) {
+                    return item.product_id.includes(JSON.parse(product.id));
+                } else {
+                    return product.id === item.product_id;
+                }
+            });
             if (!promotionUse) return {};
-            const promotion = this.promotion.promotion.find(item => item.id === promotionUse.id);
+            const promotion = this.promotion.promotion.find(item => item.id === promotionUse.promotion_id);
             if (!promotion) return {};
             const discount = promotion.discount;
             this.countDown[product.id] = promotion.end;

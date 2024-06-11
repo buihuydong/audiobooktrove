@@ -42,26 +42,27 @@ export default defineEventHandler(async (event) => {
         if (res && !resPromotion.error) {
             const today = resTimezone.current_time;
             res.data.forEach((product: any) => {
-                const promotionUseProduct = resPromotion.data.promotionUse.find((item: any) => product.id === item.product_id);
+                const promotionUseProduct = resPromotion.data.promotionUse.find((item: any) => {
+                    if (Array.isArray(JSON.parse(item.product_id))) {
+                        return item.product_id.includes(JSON.parse(product.id));
+                    } else {
+                        return product.id === item.product_id;
+                    }
+                });
                 const promotionUseRole = resPromotion.data.promotionUse.find((item: any) => roleProfile === item.role_id);
-
                 let finalPrice = parseFloat(product.price);
-
                 if (promotionUseProduct || promotionUseRole) {
-                    const promotionProduct = promotionUseProduct ? resPromotion.data.promotion.find((item: any) => item.id === promotionUseProduct.id) : null;
-                    const promotionRole = promotionUseRole ? resPromotion.data.promotion.find((item: any) => item.id === promotionUseRole.id) : null;
-
+                    const promotionProduct = promotionUseProduct ? resPromotion.data.promotion.find((item: any) => item.id === promotionUseProduct.promotion_id) : null;
+                    const promotionRole = promotionUseRole ? resPromotion.data.promotion.find((item: any) => item.id === promotionUseRole.promotion_id) : null;
                     if (promotionProduct && promotionProduct.end > today) {
                         const discount = promotionProduct.discount;
                         finalPrice = parseFloat((finalPrice * (1 - discount / 100)).toFixed(2));
                     }
-
                     if (promotionRole && promotionRole.end > today) {
                         const discount = promotionRole.discount;
                         finalPrice = parseFloat((finalPrice * (1 - discount / 100)).toFixed(2));
                     }
                 }
-
                 product.price = finalPrice;
             });
         }

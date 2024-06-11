@@ -10,7 +10,7 @@
                     <p class="text-sm" v-html="products.data.product.publisher_description"></p>
                 </Fieldset>
             </div>
-            <div class="bg-white rounded-md shadow my-3 p-3">
+            <div v-if="products.data.product.about_by" class="bg-white rounded-md shadow my-3 p-3">
                 <Fieldset :legend="'About' + ' ' + products.data.product.name" :toggleable="true">
                     <p class="text-sm" v-html="products.data.product.about_by"></p>
                 </Fieldset>

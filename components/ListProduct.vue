@@ -37,12 +37,11 @@
                                     <div class="text-sm text-left font-normal my-2 text-black">
                                         <span class="text-sub">Language:</span> {{ product.language }}
                                     </div>
-                                    <div class="text-sm text-left font-normal my-2">
+                                    <div v-if="product.publisher" class="text-sm text-left font-normal my-2">
                                         <span class="text-sub">Publisher: </span>
-                                        <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher
-                                            }}</span>
+                                        <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher ?? '' }}</span>
                                     </div>
-                                    <div class="text-sm text-left font-normal my-2 text-black">
+                                    <div v-if="product.description" class="text-sm text-left font-normal my-2 text-black">
                                         <span class="text-sub">Description:</span>
                                         <p v-html="product.description"></p>
                                     </div>
@@ -101,9 +100,9 @@
                         <div class="text-sm text-left font-normal my-2">
                             <span class="text-sub">Language:</span> {{ product.language }}
                         </div>
-                        <div class="text-sm text-left font-normal my-2">
+                        <div v-if="product.publisher" class="text-sm text-left font-normal my-2">
                             <span class="text-sub">Publisher: </span>
-                            <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher }}</span>
+                            <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher ?? '' }}</span>
                         </div>
                     </div>
                 </div>
@@ -142,16 +141,17 @@
                             </div>
                         </span>
                     </Button>
-                    <Button :disabled="checkCartBuy[product.id] || inProfile[product.id]" class="BuyBtn my-1 w-full justify-center shadow" @click="handleBuyNow(product)">
+                    <Button :disabled="checkCartBuy[product.id] || inProfile[product.id]"
+                        class="BuyBtn my-1 w-full justify-center shadow" @click="handleBuyNow(product)">
                         <span class="IconContainer" aria-label="button buy now">
                             <IconsSend class="text-white" />
                         </span>
                         <span class="text-sm text-white text-nowrap">
                             <div class="flex items-center gap-1" v-if="!inProfile[product.id]">
                                 Buy now
-                            <div class="mt-0.5" v-if="checkCartBuy[product.id]">
-                                <IconsTadpole />
-                            </div>
+                                <div class="mt-0.5" v-if="checkCartBuy[product.id]">
+                                    <IconsTadpole />
+                                </div>
                             </div>
                             <div class="flex items-center gap-1" v-if="inProfile[product.id]">
                                 <IconsUser class="text-white" />In profile
@@ -312,9 +312,15 @@ export default {
         },
         promotionStyle(product) {
             if (!this.promotion) return {};
-            const promotionUse = this.promotion.promotionUse.find(item => product.id === item.product_id);
+            const promotionUse = this.promotion.promotionUse.find(item => {
+                if (Array.isArray(JSON.parse(item.product_id))) {
+                    return item.product_id.includes(JSON.parse(product.id));
+                } else {
+                    return product.id === item.product_id;
+                }
+            });
             if (!promotionUse) return {};
-            const promotion = this.promotion.promotion.find(item => item.id === promotionUse.id);
+            const promotion = this.promotion.promotion.find(item => item.id === promotionUse.promotion_id);
             if (!promotion) return {};
 
             const discount = promotion.discount;

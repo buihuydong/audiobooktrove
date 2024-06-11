@@ -38,12 +38,11 @@
                             <div class="text-sm text-left font-normal my-2 text-black">
                                 <span class="text-sub">Language:</span> {{ product.language }}
                             </div>
-                            <div class="text-sm text-left font-normal my-2">
+                            <div v-if="product.publisher" class="text-sm text-left font-normal my-2">
                                 <span class="text-sub">Publisher: </span>
-                                <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher
-                                    }}</span>
+                                <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher ?? '' }}</span>
                             </div>
-                            <div class="text-sm text-left font-normal my-2 text-black">
+                            <div v-if="product.description" class="text-sm text-left font-normal my-2 text-black">
                                 <span class="text-sub">Description:</span>
                                 <p v-html="product.description"></p>
                             </div>
@@ -57,14 +56,14 @@
                         </NuxtLink>
                     </div>
                     <div class="my-2">
-                        <div class="text-sm font-medium text-black">
+                        <div class="text-base font-medium text-black">
                             {{ product.name }}
                         </div>
-                        <div class="text-sm text-sub">
-                            By: {{ product.by }}
+                        <div class="text-sm">
+                            By: <span class="text-main">{{ product.by }}</span> 
                         </div>
-                        <div class="text-sm text-sub">
-                            Narrated by:{{ product.narrated_by }}
+                        <div class="text-sm">
+                            Narrated by: <span class="text-main">{{ product.narrated_by }}</span>
                         </div>
                     </div>
                 </a-tooltip>
@@ -174,10 +173,17 @@ export default {
         },
         promotionStyle(product) {
             if (!this.promotion) return {};
-            const promotionUse = this.promotion.promotionUse.find(item => product.id === item.product_id);
+            const promotionUse = this.promotion.promotionUse.find(item => {
+                if (Array.isArray(JSON.parse(item.product_id))) {
+                    return item.product_id.includes(JSON.parse(product.id));
+                } else {
+                    return product.id === item.product_id;
+                }
+            });
             if (!promotionUse) return {};
-            const promotion = this.promotion.promotion.find(item => item.id === promotionUse.id);
+            const promotion = this.promotion.promotion.find(item => item.id === promotionUse.promotion_id);
             if (!promotion) return {};
+
             return {
                 '--promotion-content': `'Sale ${promotion.discount}%'`,
             };

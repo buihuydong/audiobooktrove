@@ -38,31 +38,28 @@
                                     class="text-sm lg:text-base font-bold lg:font-medium text-black border-b-[1px] py-2 border-black">
                                     Contact
                                 </div>
-                                <div v-if="contact.email" class="flex items-center gap-2 mt-2">
-                                    <IconsMail />
+                                <div v-if="contact.email" class="flex items-center gap-2 mt-2 hover:text-orange-500 duration-200">
+                                    <IconsMail class="text-sm" />
                                     <a :href="`mailto:${contact.email}`">{{ contact.email }}</a>
                                 </div>
-                                <div v-if="contact.facebook" class="flex items-center gap-2 mt-2">
-                                    <IconsFacebook />
-                                    <a :href="contact.facebook" target="_blank" rel="noopener noreferrer">{{
-                                        contact.facebook }}</a>
+                                <div v-if="contact.facebook" class="flex flex-wrap items-center gap-2 mt-2 hover:text-orange-500 duration-200">
+                                    <IconsFacebook class="text-xl" />
+                                    <a :href="contact.facebook" target="_blank" rel="noopener noreferrer">Facebook</a>
                                 </div>
-                                <div v-if="contact.twitter" class="flex items-center gap-2 mt-2">
-                                    <IconsTwitter />
-                                    <a :href="contact.twitter" target="_blank" rel="noopener noreferrer">{{
-                                        contact.twitter }}</a>
+                                <div v-if="contact.twitter" class="flex items-center gap-2 mt-2 hover:text-orange-500 duration-200">
+                                    <IconsTwitter class="text-xl" />
+                                    <a :href="contact.twitter" target="_blank" rel="noopener noreferrer">Twitter</a>
                                 </div>
-                                <div v-if="contact.instagram" class="flex items-center gap-2 mt-2">
-                                    <IconsInstagram />
-                                    <a :href="contact.instagram" target="_blank" rel="noopener noreferrer">{{
-                                        contact.instagram }}</a>
+                                <div v-if="contact.instagram" class="flex items-center gap-2 mt-2 hover:text-orange-500 duration-200">
+                                    <IconsInstagram class="text-xl" />
+                                    <a :href="contact.instagram" target="_blank" rel="noopener noreferrer">Instagram</a>
                                 </div>
-                                <div v-if="contact.phone" class="flex items-center gap-2 mt-2">
+                                <div v-if="contact.phone" class="flex items-center gap-2 mt-2 hover:text-orange-500 duration-200">
                                     <i class="pi pi-phone"></i>
                                     <a :href="'tel:' + contact.phone" target="_blank" rel="noopener noreferrer">{{
                                         contact.phone }}</a>
                                 </div>
-                                <div v-if="contact.adress" class="flex items-center gap-2 mt-2">
+                                <div v-if="contact.adress" class="flex items-center gap-2 mt-2 hover:text-orange-500 duration-200">
                                     <i class="pi pi-map-marker"></i>
                                     <div>{{ contact.adress }}</div>
                                 </div>
