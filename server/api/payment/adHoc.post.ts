@@ -43,10 +43,17 @@ export default defineEventHandler(async (event) => {
             const today = resTimezone.current_time;
             res.data.forEach((product: any) => {
                 const promotionUseProduct = resPromotion.data.promotionUse.find((item: any) => {
-                    if (Array.isArray(JSON.parse(item.product_id))) {
-                        return item.product_id.includes(JSON.parse(product.id));
-                    } else {
-                        return product.id === item.product_id;
+                    try {
+                        if (Array.isArray(item.product_id)) {
+                            const cleanedProductId = product.id.toString().trim();
+                            const cleanedProductIds = item.product_id.map((id: any) => id.toString().trim());
+                            return cleanedProductIds.includes(cleanedProductId);
+                        } else {
+                            return product.id === item.product_id;
+                        }
+                    } catch (e) {
+                        console.error("Error parsing JSON:", e);
+                        return false;
                     }
                 });
                 const promotionUseRole = resPromotion.data.promotionUse.find((item: any) => roleProfile === item.role_id);

@@ -40,7 +40,8 @@
                             </div>
                             <div v-if="product.publisher" class="text-sm text-left font-normal my-2">
                                 <span class="text-sub">Publisher: </span>
-                                <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher ?? '' }}</span>
+                                <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher ?? ''
+                                    }}</span>
                             </div>
                             <div v-if="product.description" class="text-sm text-left font-normal my-2 text-black">
                                 <span class="text-sub">Description:</span>
@@ -49,8 +50,8 @@
                         </div>
                     </template>
                     <div class="overflow-hidden">
-                        <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)"
-                            class="shadow card_box_slide" :style="promotionStyle(product)">
+                        <NuxtLink :to="'/audiobooks/' + handleSlug(product.name)" class="shadow card_box_slide"
+                            :style="promotionStyle(product)">
                             <img :src="product.image" class="rounded-md w-full h-full object-cover"
                                 :alt="product.name" />
                         </NuxtLink>
@@ -60,7 +61,7 @@
                             {{ product.name }}
                         </div>
                         <div class="text-sm">
-                            By: <span class="text-main">{{ product.by }}</span> 
+                            By: <span class="text-main">{{ product.by }}</span>
                         </div>
                         <div class="text-sm">
                             Narrated by: <span class="text-main">{{ product.narrated_by }}</span>
@@ -86,12 +87,12 @@
                 </div>
             </swiper-slide>
             <div class="flex justify-center mt-5">
-                    <NuxtLink :to="'/audiobooks?category=' + handleSlug(category)" class="">
-                        <span class="text-sm hover:text-orange-500 duration-200 flex items-center gap-1">
-                            <IconsBouncing /> See more <i class="pi pi-arrow-right text-xs"></i>
-                        </span>
-                    </NuxtLink>
-                </div>
+                <NuxtLink :to="'/audiobooks?category=' + handleSlug(category)" class="">
+                    <span class="text-sm hover:text-orange-500 duration-200 flex items-center gap-1">
+                        <IconsBouncing /> See more <i class="pi pi-arrow-right text-xs"></i>
+                    </span>
+                </NuxtLink>
+            </div>
         </swiper>
         <div v-else>
             <div class="flex flex-col items-center justify-center">
@@ -173,17 +174,24 @@ export default {
         },
         promotionStyle(product) {
             if (!this.promotion) return {};
+
             const promotionUse = this.promotion.promotionUse.find(item => {
-                if (Array.isArray(JSON.parse(item.product_id))) {
-                    return item.product_id.includes(JSON.parse(product.id));
-                } else {
-                    return product.id === item.product_id;
+                try {
+                    if (Array.isArray(item.product_id)) {
+                        const cleanedProductId = product.id.toString().trim();
+                        const cleanedProductIds = item.product_id.map(id => id.toString().trim());
+                        return cleanedProductIds.includes(cleanedProductId);
+                    } else {
+                        return product.id === item.product_id;
+                    }
+                } catch (e) {
+                    console.error("Error parsing JSON:", e);
+                    return false;
                 }
             });
             if (!promotionUse) return {};
             const promotion = this.promotion.promotion.find(item => item.id === promotionUse.promotion_id);
             if (!promotion) return {};
-
             return {
                 '--promotion-content': `'Sale ${promotion.discount}%'`,
             };

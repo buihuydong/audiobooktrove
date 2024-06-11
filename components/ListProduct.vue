@@ -39,9 +39,11 @@
                                     </div>
                                     <div v-if="product.publisher" class="text-sm text-left font-normal my-2">
                                         <span class="text-sub">Publisher: </span>
-                                        <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher ?? '' }}</span>
+                                        <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher ??
+                                            '' }}</span>
                                     </div>
-                                    <div v-if="product.description" class="text-sm text-left font-normal my-2 text-black">
+                                    <div v-if="product.description"
+                                        class="text-sm text-left font-normal my-2 text-black">
                                         <span class="text-sub">Description:</span>
                                         <p v-html="product.description"></p>
                                     </div>
@@ -102,7 +104,8 @@
                         </div>
                         <div v-if="product.publisher" class="text-sm text-left font-normal my-2">
                             <span class="text-sub">Publisher: </span>
-                            <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher ?? '' }}</span>
+                            <span class="text-main border-b-[1px] border-orange-500">{{ product.publisher ?? ''
+                                }}</span>
                         </div>
                     </div>
                 </div>
@@ -313,8 +316,10 @@ export default {
         promotionStyle(product) {
             if (!this.promotion) return {};
             const promotionUse = this.promotion.promotionUse.find(item => {
-                if (Array.isArray(JSON.parse(item.product_id))) {
-                    return item.product_id.includes(JSON.parse(product.id));
+                if (Array.isArray(item.product_id)) {
+                    const cleanedProductId = product.id.toString().trim();
+                    const cleanedProductIds = item.product_id.map(id => id.toString().trim());
+                    return cleanedProductIds.includes(cleanedProductId);
                 } else {
                     return product.id === item.product_id;
                 }

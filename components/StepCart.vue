@@ -12,7 +12,8 @@
                                 :checked="selectedProducts.length === productCart.length && selectedProducts.length != 0" />
                         </div>
                         <div class="flex flex-col gap-3">
-                            <div v-for="product in productCart" :key="product.id" class="flex flex-wrap lg:flex-nowrap gap-3">
+                            <div v-for="product in productCart" :key="product.id"
+                                class="flex flex-wrap lg:flex-nowrap gap-3">
                                 <div class="flex gap-3">
                                     <div class="flex gap-3">
                                         <a-checkbox type="checkbox" :value="product.id"
@@ -48,7 +49,8 @@
                                         </Button>
                                     </div>
                                 </div>
-                                <div class="lg:hidden block w-full pb-2 border-b-[1px] border-black" v-if="countDown[product.id]">
+                                <div class="lg:hidden block w-full pb-2 border-b-[1px] border-black"
+                                    v-if="countDown[product.id]">
                                     <Countdown :endTime="countDown[product.id]" :productId="product.id"
                                         @expired="handleExpired" />
                                 </div>
@@ -265,19 +267,31 @@ export default {
         },
         promotionStyle(product) {
             if (!this.promotion) return {};
+
             const promotionUse = this.promotion.promotionUse.find(item => {
-                if (Array.isArray(JSON.parse(item.product_id))) {
-                    return item.product_id.includes(JSON.parse(product.id));
-                } else {
-                    return product.id === item.product_id;
+                try {
+                    if (Array.isArray(item.product_id)) {
+                        const cleanedProductId = product.id.toString().trim();
+                        const cleanedProductIds = item.product_id.map(id => id.toString().trim());
+                        return cleanedProductIds.includes(cleanedProductId);
+                    } else {
+                        return product.id === item.product_id;
+                    }
+                } catch (e) {
+                    console.error("Error parsing JSON:", e);
+                    return false;
                 }
             });
+
             if (!promotionUse) return {};
+
             const promotion = this.promotion.promotion.find(item => item.id === promotionUse.promotion_id);
             if (!promotion) return {};
+
             const discount = promotion.discount;
             this.countDown[product.id] = promotion.end;
             this.discountedPrice[product.id] = parseFloat((product.price * (1 - discount / 100)).toFixed(2));
+
             return {
                 '--promotion-content': `'Sale ${discount}%'`,
             };
