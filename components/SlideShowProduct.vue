@@ -81,11 +81,14 @@
                     <div class="text-sm font-medium text-black">
                         {{ product.name }}
                     </div>
-                    <div class="text-sm text-sub">
-                        By: {{ product.by }}
+                    <div class="text-sm">
+                        <span class="text-sub">By: </span>
+                        <span class="text-main border-b-[1px] border-orange-500">{{ product.by }}</span>
                     </div>
-                    <div class="text-sm text-sub">
-                        Narrated by:{{ product.narrated_by }}
+                    <div class="text-sm">
+                        <span class="text-sub">Narrated by: </span>
+                        <span class="text-main border-b-[1px] border-orange-500">{{ product.narrated_by
+                            }}</span>
                     </div>
                 </div>
             </swiper-slide>
