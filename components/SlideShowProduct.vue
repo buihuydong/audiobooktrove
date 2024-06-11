@@ -61,10 +61,13 @@
                             {{ product.name }}
                         </div>
                         <div class="text-sm">
-                            By: <span class="text-main">{{ product.by }}</span>
+                            <span class="text-sub">By: </span>
+                            <span class="text-main border-b-[1px] border-orange-500">{{ product.by }}</span>
                         </div>
                         <div class="text-sm">
-                            Narrated by: <span class="text-main">{{ product.narrated_by }}</span>
+                            <span class="text-sub">Narrated by: </span>
+                            <span class="text-main border-b-[1px] border-orange-500">{{ product.narrated_by
+                                }}</span>
                         </div>
                     </div>
                 </a-tooltip>
