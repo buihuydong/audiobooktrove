@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col w-full gap-3">
-        <div class="flex flex-wrap gap-3 bg-white rounded-md shadow p-2" v-for="n in 1" :key="n">
+        <div class="flex flex-wrap gap-3 bg-white rounded-md shadow p-2" v-for="n in 10" :key="n">
             <div class="rounded-md overflow-hidden basis-full bg-white flex gap-3">
                 <div class="flex gap-3 basis-full md:basis-7/12 lg:basis-8/12">
                     <div class="flex flex-col justify-center gap-2 relative">
