@@ -312,6 +312,7 @@ export default {
             });
         },
         handlePage(page) {
+            page = page/10;
             let query = { page: page };
             this.$router.push({ path: '/profile', query });
         },

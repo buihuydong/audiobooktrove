@@ -221,6 +221,7 @@ export default {
     },
     methods: {
         handlePage(page, category, sort, keyword) {
+            page = page/10;
             const currentCategory = this.$route.query.category;
             const currentKeyword = this.$route.query.keyword;
             const currentSort = this.$route.query.sort;
