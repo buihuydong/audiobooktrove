@@ -158,6 +158,9 @@ export default {
             return $createSlug(string);
         },
         formatLabel(label) {
+            if(label == null) {
+                return label = 'All';
+            }
             return label
                 .split('_')
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
