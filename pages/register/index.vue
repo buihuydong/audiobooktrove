@@ -1,7 +1,7 @@
 <template>
     <div class="bg-main p-5">
         <div class="max-w-[340px] mx-auto rounded-md p-5 bg-white shadow">
-            <a-alert v-if="success" class=" mb-4" message="Registration successful (Please verify email to log in)" type="success" show-icon />
+            <a-alert v-if="success" class=" mb-4" message="Registration Successful (Please verify email to log in. Note: may be in spam)" type="success" show-icon />
             <a-alert v-if="failure" class=" mb-4"
                 message="Registration failed (email already registered or error during registration)" type="error"
                 show-icon />
