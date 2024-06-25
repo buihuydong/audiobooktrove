@@ -158,7 +158,8 @@ export default {
             return $createSlug(string);
         },
         formatLabel(label) {
-            if(label == null) {
+        console.log(label);
+            if(label == 'publisher: null') {
                 return label = 'All';
             }
             return label
